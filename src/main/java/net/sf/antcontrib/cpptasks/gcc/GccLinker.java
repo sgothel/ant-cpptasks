@@ -81,6 +81,12 @@ public class GccLinker extends AbstractLdLinker {
      */
     public String decorateLinkerOption(StringBuffer buf, String arg) {
         String decoratedArg = arg;
+        if (arg.startsWith("--sysroot")) {
+          return arg;
+        }
+        if (arg.startsWith("-nostdlib")) {
+          return arg;
+        }
         if (arg.length() > 1 && arg.charAt(0) == '-') {
             switch (arg.charAt(1)) {
                 //
