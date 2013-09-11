@@ -27,7 +27,7 @@ import net.sf.antcontrib.cpptasks.types.LibrarySet;
 /**
  * Adapter for the g++ variant of the GCC linker
  * 
- * @author Stephen M. Webb <stephen.webb@bregmasoft.com>
+ * @author Stephen M. Webb <stephen.webb@bregmasoft.com>, et.al.
  */
 public class GppLinker extends AbstractLdLinker {
     protected static final String[] discardFiles = new String[0];
@@ -44,12 +44,17 @@ public class GppLinker extends AbstractLdLinker {
             "-prebind", "-s", "-static", "-shared", "-symbolic", "-Xlinker"};
     private static final GppLinker instance = new GppLinker("gcc", objFiles,
             discardFiles, "", "", false, null);
+    private static final GppLinker clangInstance = new GppLinker("clang", objFiles,
+            discardFiles, "", "", false, null);
     private static final GppLinker machDllLinker = new GppLinker("gcc",
             objFiles, discardFiles, "lib", ".dylib", false, null);
     private static final GppLinker machPluginLinker = new GppLinker("gcc",
             objFiles, discardFiles, "lib", ".bundle", false, null);
     public static GppLinker getInstance() {
         return instance;
+    }
+    public static GppLinker getCLangInstance() {
+        return clangInstance;
     }
     private File[] libDirs;
     private String runtimeLibrary;

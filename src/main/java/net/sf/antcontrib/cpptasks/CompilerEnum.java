@@ -53,8 +53,16 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * <td>GCC C++ compiler</td>
  * </tr>
  * <tr>
+ * <td>clang</td>
+ * <td>clang / llvm C compiler</td>
+ * </tr>
+ * <tr>
  * <td>g++</td>
  * <td>GCC C++ compiler</td>
+ * </tr>
+ * <tr>
+ * <td>clang++</td>
+ * <td>clang++ / llvm C++ compiler</td>
  * </tr>
  * <tr>
  * <td>c++</td>
@@ -182,23 +190,23 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * </tr>
  * </table>
  * 
- * @author Curt Arnold
+ * @author Curt Arnold, et.al.
  *  
  */
 public class CompilerEnum extends EnumeratedAttribute {
     private final static ProcessorEnumValue[] compilers = new ProcessorEnumValue[]{
             new ProcessorEnumValue("gcc", GccCCompiler.getInstance()),
             new ProcessorEnumValue("g++", GccCCompiler.getGppInstance()),
+            new ProcessorEnumValue("clang", GccCCompiler.getCLangInstance()),
+            new ProcessorEnumValue("clang++", GccCCompiler.getCPPLangInstance()),
             new ProcessorEnumValue("c++", GccCCompiler.getCppInstance()),
             new ProcessorEnumValue("g77", GccCCompiler.getG77Instance()),
             new ProcessorEnumValue("msvc", DevStudioCCompiler.getInstance()),
             new ProcessorEnumValue("msvc8", DevStudio2005CCompiler.getInstance()),
             new ProcessorEnumValue("bcc", BorlandCCompiler.getInstance()),
-            new ProcessorEnumValue("msrc", DevStudioResourceCompiler
-                    .getInstance()),
+            new ProcessorEnumValue("msrc", DevStudioResourceCompiler.getInstance()),
             new ProcessorEnumValue("brc", BorlandResourceCompiler.getInstance()),
-            new ProcessorEnumValue("df", CompaqVisualFortranCompiler
-                    .getInstance()),
+            new ProcessorEnumValue("df", CompaqVisualFortranCompiler.getInstance()),
             new ProcessorEnumValue("midl", DevStudioMIDLCompiler.getInstance()),
             new ProcessorEnumValue("icl", IntelWin32CCompiler.getInstance()),
             new ProcessorEnumValue("ecl", IntelWin64CCompiler.getInstance()),
