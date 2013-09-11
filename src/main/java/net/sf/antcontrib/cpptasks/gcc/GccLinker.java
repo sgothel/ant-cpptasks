@@ -17,6 +17,8 @@
 package net.sf.antcontrib.cpptasks.gcc;
 import java.io.File;
 import java.util.Vector;
+import java.util.HashSet;
+import java.util.Arrays;
 
 import net.sf.antcontrib.cpptasks.CUtil;
 import net.sf.antcontrib.cpptasks.compiler.LinkType;
@@ -33,9 +35,10 @@ public class GccLinker extends AbstractLdLinker {
     private static final String[] libtoolObjFiles = new String[]{".fo", ".a",
             ".lib", ".dll", ".so", ".sl"};
     private static String[] linkerOptions = new String[]{"-bundle",
-            "-dynamiclib", "-nostartfiles", "-nostdlib", "-prebind", "-s",
+            "-dynamiclib", "-nostartfiles", "-nostdlib", "-prebind", "-noprebind", "-s",
             "-static", "-shared", "-symbolic", "-Xlinker",
             "--export-all-symbols", "-static-libgcc",};
+    private static String[] darwinLinkerOptions = new String[]{"-arch", "-weak_framework", "-lazy_framework", "-weak_library" };
     private static final GccLinker dllLinker = new GccLinker("gcc", objFiles,
             discardFiles, "lib", ".so", false, new GccLinker("gcc", objFiles,
                     discardFiles, "lib", ".so", true, null));
@@ -97,12 +100,13 @@ public class GccLinker extends AbstractLdLinker {
                     break;
                 default :
                     boolean known = false;
-                    for (int i = 0; i < linkerOptions.length; i++) {
-                        if (linkerOptions[i].equals(arg)) {
-                            known = true;
-                            break;
-                        }
+                    HashSet allLinkerOptions = new HashSet();
+                    allLinkerOptions.addAll(Arrays.asList(linkerOptions));
+                    if (isDarwin()) {
+                        allLinkerOptions.addAll(Arrays.asList(darwinLinkerOptions));
                     }
+                    known = allLinkerOptions.contains(arg);
+
                     if (!known) {
                         buf.setLength(0);
                         buf.append("-Wl,");

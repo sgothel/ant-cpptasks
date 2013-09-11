@@ -73,9 +73,8 @@ public class TestAbstractLdLinker extends TestCase {
         pluginOutType.setValue("shared");
         pluginType.setOutputType(pluginOutType);
         linker.addImpliedArgs(false, pluginType, args);
-        assertEquals(2, args.size());
-        assertEquals("-prebind", args.elementAt(0));
-        assertEquals("-dynamiclib", args.elementAt(1));
+        assertEquals(1, args.size());
+        assertEquals("-dynamiclib", args.elementAt(0));
     }
     /**
      * Checks for proper arguments for plugin generation on Darwin
