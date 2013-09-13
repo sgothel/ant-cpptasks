@@ -37,31 +37,43 @@ public class GccLinker extends AbstractLdLinker {
     private static String[] linkerOptions = new String[]{"-bundle",
             "-dynamiclib", "-nostartfiles", "-nostdlib", "-prebind", "-noprebind", "-s",
             "-static", "-shared", "-symbolic", "-Xlinker",
-            "--export-all-symbols", "-static-libgcc",};
+            "--export-all-symbols", "-static-libgcc",};    
     private static String[] darwinLinkerOptions = new String[]{"-arch", "-weak_framework", "-lazy_framework", "-weak_library" };
-    private static final GccLinker dllLinker = new GccLinker("gcc", objFiles,
-            discardFiles, "lib", ".so", false, new GccLinker("gcc", objFiles,
-                    discardFiles, "lib", ".so", true, null));
+    
+    private static final GccLinker dllLinker = new GccLinker("gcc", objFiles, 
+            discardFiles, "lib", ".so", false, new GccLinker("gcc", objFiles, discardFiles, "lib", ".so", true, null));
+    private static final GccLinker dllCLangLinker = new GccLinker("clang", objFiles, 
+            discardFiles, "lib", ".so", false, new GccLinker("clang", objFiles, discardFiles, "lib", ".so", true, null));
+    
     private static final GccLinker instance = new GccLinker("gcc", objFiles,
             discardFiles, "", "", false, null);
     private static final GccLinker clangInstance = new GccLinker("clang", objFiles,
             discardFiles, "", "", false, null);
+    
     private static final GccLinker machBundleLinker = new GccLinker("gcc",
             objFiles, discardFiles, "lib", ".bundle", false, null);
+    private static final GccLinker machCLangBundleLinker = new GccLinker("clang",
+            objFiles, discardFiles, "lib", ".bundle", false, null);
+    
     private static final GccLinker machDllLinker = new GccLinker("gcc",
             objFiles, discardFiles, "lib", ".dylib", false, null);
+    private static final GccLinker machDllCLangLinker = new GccLinker("clang",
+            objFiles, discardFiles, "lib", ".dylib", false, null);
+    
     public static GccLinker getInstance() {
         return instance;
     }
     public static GccLinker getCLangInstance() {
         return clangInstance;
     }
+    private final boolean isGCC;
     private File[] libDirs;
     protected GccLinker(String command, String[] extensions,
             String[] ignoredExtensions, String outputPrefix,
             String outputSuffix, boolean isLibtool, GccLinker libtoolLinker) {
         super(command, "-dumpversion", extensions, ignoredExtensions,
                 outputPrefix, outputSuffix, isLibtool, libtoolLinker);
+        isGCC = "gcc".equals(command);
     }
     protected void addImpliedArgs(boolean debug, LinkType linkType, Vector args) {
         super.addImpliedArgs(debug, linkType, args);
@@ -204,22 +216,22 @@ public class GccLinker extends AbstractLdLinker {
     }
     public Linker getLinker(LinkType type) {
         if (type.isStaticLibrary()) {
-            return GccLibrarian.getInstance();
+            return GccLibrarian.getInstance(); // uses 'ar', which is 'gcc' agnostic
         }
         if (type.isPluginModule()) {
             if (isDarwin()) {
-                return machBundleLinker;
+                return isGCC ? machBundleLinker : machCLangBundleLinker;
             } else {
-                return dllLinker;
+                return isGCC ? dllLinker : dllCLangLinker;
             }
         }
         if (type.isSharedLibrary()) {
             if (isDarwin()) {
-                return machDllLinker;
+                return isGCC ? machDllLinker : machDllCLangLinker;
             } else {
-                return dllLinker;
+                return isGCC ? dllLinker : dllCLangLinker;
             }
         }
-        return instance;
+        return isGCC ? instance : clangInstance;
     }
 }
