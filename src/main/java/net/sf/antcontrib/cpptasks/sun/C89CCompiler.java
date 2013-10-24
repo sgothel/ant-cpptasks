@@ -41,8 +41,8 @@ public class C89CCompiler extends CommandLineCCompiler {
     }
     private C89CCompiler(boolean newEnvironment, Environment env) {
         super("c89", null, new String[]{".c", ".cc", ".cpp", ".cxx", ".c++"},
-                new String[]{".h", ".hpp"}, ".o", false, null, newEnvironment,
-                env);
+                new String[]{".h", ".hpp"}, ".o", false, false, null,
+                newEnvironment, env);
     }
     protected void addImpliedArgs(
     		final Vector args, 

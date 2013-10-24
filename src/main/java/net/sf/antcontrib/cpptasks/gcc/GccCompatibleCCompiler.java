@@ -35,29 +35,32 @@ public abstract class GccCompatibleCCompiler extends CommandLineCCompiler {
             ".inl"};
     private final static String[] sourceExtensions = new String[]{".c", ".cc",
             ".cpp", ".cxx", ".c++", ".i", ".f", ".for"};
-    /**
-     * Private constructor. Use GccCCompiler.getInstance() to get singleton
-     * instance of this class.
-     */
-    protected GccCompatibleCCompiler(String command, String identifierArg,
-            boolean libtool, GccCompatibleCCompiler libtoolCompiler,
-            boolean newEnvironment, Environment env) {
-        super(command, identifierArg, sourceExtensions, headerExtensions,
-                libtool ? ".fo" : ".o", libtool, libtoolCompiler,
-                newEnvironment, env);
+
+    protected GccCompatibleCCompiler(GccCompatibleCCompiler cc, boolean isXcoderun) {
+        super(cc, isXcoderun);
     }
     /**
      * Private constructor. Use GccCCompiler.getInstance() to get singleton
      * instance of this class.
+     * @param isXcoderun TODO
      */
+    protected GccCompatibleCCompiler(String command, String identifierArg,
+            boolean isXcoderun, boolean libtool, GccCompatibleCCompiler libtoolCompiler,
+            boolean newEnvironment, Environment env) {
+        super(command, identifierArg, sourceExtensions, headerExtensions,
+                libtool ? ".fo" : ".o", isXcoderun, libtool,
+                libtoolCompiler, newEnvironment, env);
+    }
+
     protected GccCompatibleCCompiler(String command, String identifierArg,
             String[] sourceExtensions, String[] headerExtensions,
-            boolean libtool, GccCompatibleCCompiler libtoolCompiler,
+            boolean isXcoderun, boolean libtool, GccCompatibleCCompiler libtoolCompiler,
             boolean newEnvironment, Environment env) {
-        super(command, identifierArg, sourceExtensions, headerExtensions,
-                libtool ? ".fo" : ".o", libtool, libtoolCompiler,
+          super(command, identifierArg, sourceExtensions, headerExtensions,
+                libtool ? ".fo" : ".o", isXcoderun, libtool, libtoolCompiler,
                 newEnvironment, env);
     }
+
     public void addImpliedArgs(final Vector args,
                     final boolean debug,
             final boolean multithreaded,

@@ -50,8 +50,8 @@ public final class ForteCCCompiler extends GccCompatibleCCompiler {
      */
     private ForteCCCompiler(String command, String[] sourceExtensions, 
             String[] headerExtensions) {
-        super(command, "-V", sourceExtensions, headerExtensions, false, null, 
-                false, null);
+        super(command, "-V", sourceExtensions, headerExtensions, false, false, 
+                null, false, null);
     }
     public void addImpliedArgs(final Vector args, 
     		final boolean debug,

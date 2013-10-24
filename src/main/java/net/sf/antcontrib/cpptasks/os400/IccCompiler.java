@@ -41,8 +41,8 @@ public class IccCompiler extends CommandLineCCompiler {
     }
     private IccCompiler(boolean newEnvironment, Environment env) {
         super("icc", null, new String[]{".c", ".cc", ".cpp", ".cxx", ".c++",
-                ".s"}, new String[]{".h", ".hpp"}, ".o", false, null,
-                newEnvironment, env);
+                ".s"}, new String[]{".h", ".hpp"}, ".o", false, false,
+                null, newEnvironment, env);
     }
     protected void addImpliedArgs(final Vector args, 
     		final boolean debug,

@@ -64,7 +64,7 @@ public final class UserInterfaceCompiler
   private UserInterfaceCompiler(final boolean newEnvironment,
                                 final Environment env) {
     super("uic", "-version", new String[] {".ui"}
-          , new String[0], ".h", false, null, newEnvironment, env);
+          , new String[0], ".h", false, false, null, newEnvironment, env);
   }
 
   /**

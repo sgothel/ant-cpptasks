@@ -41,7 +41,7 @@ public final class IntelLinux64Linker extends AbstractLdLinker {
     private IntelLinux64Linker(String outputPrefix, String outputSuffix,
             boolean isLibtool, IntelLinux64Linker libtoolLinker) {
         super("ecc", "-V", objFiles, discardFiles, outputPrefix, outputSuffix,
-                isLibtool, libtoolLinker);
+                false, isLibtool, libtoolLinker);
     }
     public Linker getLinker(LinkType type) {
         if (type.isStaticLibrary()) {

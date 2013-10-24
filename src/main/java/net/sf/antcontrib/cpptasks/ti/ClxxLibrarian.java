@@ -40,7 +40,7 @@ public class ClxxLibrarian extends CommandLineLinker {
     }
     private ClxxLibrarian(String command) {
         super(command, null, new String[]{".o"}, new String[0], ".lib", false,
-                null);
+                false, null);
     }
     /*
      * (non-Javadoc)

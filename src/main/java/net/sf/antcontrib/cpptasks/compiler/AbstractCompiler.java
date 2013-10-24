@@ -40,11 +40,15 @@ public abstract class AbstractCompiler extends AbstractProcessor
         implements
             Compiler {
     private static final String[] emptyIncludeArray = new String[0];
-    private String outputSuffix;
+    private final String outputSuffix;
     protected AbstractCompiler(String[] sourceExtensions,
             String[] headerExtensions, String outputSuffix) {
         super(sourceExtensions, headerExtensions);
         this.outputSuffix = outputSuffix;
+    }
+    protected AbstractCompiler(AbstractCompiler cc) {
+        super(cc);
+        this.outputSuffix = cc.outputSuffix;
     }
     /**
      * Checks file name to see if parse should be attempted

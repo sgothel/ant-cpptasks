@@ -41,7 +41,7 @@ public final class IntelLinux32Linker extends AbstractLdLinker {
     private IntelLinux32Linker(String outputPrefix, String outputSuffix,
             boolean isLibtool, IntelLinux32Linker libtoolLinker) {
         super("icc", "-V", objFiles, discardFiles, outputPrefix, outputSuffix,
-                isLibtool, libtoolLinker);
+                false, isLibtool, libtoolLinker);
     }
     public Linker getLinker(LinkType type) {
         if (type.isStaticLibrary()) {

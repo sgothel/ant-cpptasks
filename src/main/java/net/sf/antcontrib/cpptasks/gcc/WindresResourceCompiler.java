@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Copyright 2008 The Ant-Contrib project
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,7 +29,7 @@ import net.sf.antcontrib.cpptasks.OptimizationEnum;
 import org.apache.tools.ant.types.Environment;
 /**
  * Adapter for the GNU windres resource compiler.
- * 
+ *
  * @author Curt Arnold
  */
 public final class WindresResourceCompiler extends CommandLineCompiler {
@@ -40,12 +40,12 @@ public final class WindresResourceCompiler extends CommandLineCompiler {
     }
     private WindresResourceCompiler(boolean newEnvironment, Environment env) {
         super("windres", null, new String[]{".rc"}, new String[]{".h", ".hpp",
-                ".inl"}, ".o", false, null, newEnvironment, env);
+                ".inl"}, ".o", false, false, null, newEnvironment, env);
     }
-    protected void addImpliedArgs(final Vector args, 
+    protected void addImpliedArgs(final Vector args,
     		final boolean debug,
-            final boolean multithreaded, 
-			final boolean exceptions, 
+            final boolean multithreaded,
+			final boolean exceptions,
 			final LinkType linkType,
 			final Boolean rtti,
 			final OptimizationEnum optimization) {

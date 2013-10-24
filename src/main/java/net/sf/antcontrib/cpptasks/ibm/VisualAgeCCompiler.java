@@ -53,7 +53,7 @@ public final class VisualAgeCCompiler extends GccCompatibleCCompiler {
             String[] headerExtensions, boolean newEnvironment, 
             Environment env) {
         super(command, "-help", sourceExtensions, headerExtensions, false, 
-                null, newEnvironment, env);
+                false, null, newEnvironment, env);
     }
     public void addImpliedArgs(final Vector args, 
     		final boolean debug,

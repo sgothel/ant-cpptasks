@@ -40,7 +40,7 @@ public abstract class AbstractArLibrarian extends CommandLineLinker {
             String outputPrefix, String outputExtension, boolean isLibtool,
             AbstractArLibrarian libtoolLibrarian) {
         super(command, identificationArg, inputExtensions, ignoredExtensions,
-                outputExtension, isLibtool, libtoolLibrarian);
+                outputExtension, false, isLibtool, libtoolLibrarian);
         this.outputPrefix = outputPrefix;
     }
     public void addBase(long base, Vector args) {

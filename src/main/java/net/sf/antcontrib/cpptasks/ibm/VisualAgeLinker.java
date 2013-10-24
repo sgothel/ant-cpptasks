@@ -43,7 +43,7 @@ public final class VisualAgeLinker extends AbstractLdLinker {
         //  just guessing that -? might display something useful
         //
         super(command, "-?", extensions, ignoredExtensions, outputPrefix,
-                outputSuffix, false, null);
+                outputSuffix, false, false, null);
     }
     public void addImpliedArgs(boolean debug, LinkType linkType, Vector args) {
         if (debug) {

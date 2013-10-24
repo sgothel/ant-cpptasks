@@ -38,7 +38,7 @@ public abstract class DevStudioCompatibleLinker extends CommandLineLinker {
             String outputSuffix) {
         super(command, identifierArg, new String[]{".obj", ".lib", ".res"},
                 new String[]{".map", ".pdb", ".lnk", ".dll"}, outputSuffix,
-                false, null);
+                false, false, null);
     }
     protected void addBase(long base, Vector args) {
         if (base >= 0) {

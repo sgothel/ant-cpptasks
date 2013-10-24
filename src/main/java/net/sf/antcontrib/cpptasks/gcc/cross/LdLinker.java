@@ -49,7 +49,7 @@ public final class LdLinker extends AbstractLdLinker {
             String[] ignoredExtensions, String outputPrefix,
             String outputSuffix, boolean isLibtool, LdLinker libtoolLinker) {
         super(command, "-version", extensions, ignoredExtensions, outputPrefix,
-                outputSuffix, isLibtool, libtoolLinker);
+                outputSuffix, false, isLibtool, libtoolLinker);
     }
     protected Object clone() throws CloneNotSupportedException {
         LdLinker clone = (LdLinker) super.clone();

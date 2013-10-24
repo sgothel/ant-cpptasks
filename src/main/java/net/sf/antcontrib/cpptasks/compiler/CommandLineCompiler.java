@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Copyright 2002-2004 The Ant-Contrib project
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,44 +35,58 @@ import net.sf.antcontrib.cpptasks.OptimizationEnum;;
 /**
  * An abstract Compiler implementation which uses an external program to
  * perform the compile.
- * 
+ *
  * @author Adam Murdoch
  */
 public abstract class CommandLineCompiler extends AbstractCompiler {
     private String command;
     private final Environment env;
     private String identifier;
-    private String identifierArg;
-    private boolean libtool;
-    private CommandLineCompiler libtoolCompiler;
+    private final String identifierArg;
+    private final boolean isLibtool, isXcoderun;
+    private final CommandLineCompiler libtoolCompiler;
     private final boolean newEnvironment;
+
     protected CommandLineCompiler(String command, String identifierArg,
             String[] sourceExtensions, String[] headerExtensions,
-            String outputSuffix, boolean libtool,
-            CommandLineCompiler libtoolCompiler, boolean newEnvironment,
-            Environment env) {
+            String outputSuffix, boolean isXcoderun,
+            boolean libtool, CommandLineCompiler libtoolCompiler,
+            boolean newEnvironment, Environment env) {
         super(sourceExtensions, headerExtensions, outputSuffix);
         this.command = command;
         if (libtool && libtoolCompiler != null) {
             throw new java.lang.IllegalArgumentException(
                     "libtoolCompiler should be null when libtool is true");
         }
-        this.libtool = libtool;
+        this.isLibtool = libtool;
+        this.isXcoderun = isXcoderun;
         this.libtoolCompiler = libtoolCompiler;
         this.identifierArg = identifierArg;
         this.newEnvironment = newEnvironment;
         this.env = env;
     }
+    protected CommandLineCompiler(CommandLineCompiler cc, boolean isXcoderun) {
+        super(cc);
+        this.command = cc.command;
+        this.isLibtool = cc.isLibtool;
+        this.isXcoderun = isXcoderun;
+        this.libtoolCompiler = cc.libtoolCompiler;
+        this.identifierArg = cc.identifierArg;
+        this.newEnvironment = cc.newEnvironment;
+        this.env = cc.env;
+    }
+
     abstract protected void addImpliedArgs(Vector args, boolean debug,
             boolean multithreaded, boolean exceptions, LinkType linkType,
 			Boolean rtti, OptimizationEnum optimization);
+
     /**
      * Adds command-line arguments for include directories.
-     * 
+     *
      * If relativeArgs is not null will add corresponding relative paths
      * include switches to that vector (for use in building a configuration
      * identifier that is consistent between machines).
-     * 
+     *
      * @param baseDirPath Base directory path.
      * @param includeDirs
      *            Array of include directory paths
@@ -128,7 +142,7 @@ public abstract class CommandLineCompiler extends AbstractCompiler {
     }
     /**
      * Compiles a source file.
-     * 
+     *
      */
     public void compile(CCTask task, File outputDir, String[] sourceFiles,
             String[] args, String[] endArgs, boolean relentless,
@@ -140,8 +154,11 @@ public abstract class CommandLineCompiler extends AbstractCompiler {
         //
         String command = getCommand();
         int baseLength = command.length() + args.length + endArgs.length;
-        if (libtool) {
-            baseLength += 8;
+        if (isLibtool) {
+            baseLength += 8; // 'libtool '
+        }
+        if(isXcoderun) {
+            baseLength += 6;  // 'xcrun '
         }
         for (int i = 0; i < args.length; i++) {
             baseLength += args[i].length();
@@ -175,13 +192,19 @@ public abstract class CommandLineCompiler extends AbstractCompiler {
             int argCount = args.length + 1 + endArgs.length
                     + (firstFileNextExec - sourceIndex)
                     * argumentCountPerInputFile;
-            if (libtool) {
+            if (isLibtool) {
+                argCount++;
+            }
+            if(isXcoderun) {
                 argCount++;
             }
             String[] commandline = new String[argCount];
             int index = 0;
-            if (libtool) {
+            if (isLibtool) {
                 commandline[index++] = "libtool";
+            }
+            if(isXcoderun) {
+                commandline[index++] = "xcrun";
             }
             commandline[index++] = command;
             for (int j = 0; j < args.length; j++) {
@@ -232,8 +255,8 @@ public abstract class CommandLineCompiler extends AbstractCompiler {
         }
     }
     protected CompilerConfiguration createConfiguration(final CCTask task,
-            final LinkType linkType, 
-			final ProcessorDef[] baseDefs, 
+            final LinkType linkType,
+			final ProcessorDef[] baseDefs,
 			final CompilerDef specificDef,
 			final TargetDef targetPlatform,
 			final VersionInfo versionInfo) {
@@ -400,12 +423,20 @@ public abstract class CommandLineCompiler extends AbstractCompiler {
         }
         return filename;
     }
+
+    protected final boolean getNewEnvironment() { return newEnvironment; }
+
+    protected final Environment getEnv() { return env; }
+
     protected final boolean getLibtool() {
-        return libtool;
+        return isLibtool;
+    }
+    protected final boolean getXcodeRun() {
+        return isXcoderun;
     }
     /**
      * Obtains the same compiler, but with libtool set
-     * 
+     *
      * Default behavior is to ignore libtool
      */
     public final CommandLineCompiler getLibtoolCompiler() {

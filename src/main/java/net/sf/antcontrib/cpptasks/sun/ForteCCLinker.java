@@ -44,7 +44,7 @@ public final class ForteCCLinker extends AbstractLdLinker {
     private ForteCCLinker(String command, String[] extensions,
             String[] ignoredExtensions, String outputPrefix, String outputSuffix) {
         super(command, "-V", extensions, ignoredExtensions, outputPrefix,
-                outputSuffix, false, null);
+                outputSuffix, false, false, null);
     }
     public void addImpliedArgs(boolean debug, LinkType linkType, Vector args) {
         if (debug) {

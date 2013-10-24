@@ -64,7 +64,7 @@ public final class MetaObjectCompiler
   private MetaObjectCompiler(final boolean newEnvironment,
                              final Environment env) {
     super("moc", "-version", new String[] {".h", ".cpp"}
-          , new String[0], ".moc", false, null, newEnvironment, env);
+          , new String[0], ".moc", false, false, null, newEnvironment, env);
   }
 
   /**

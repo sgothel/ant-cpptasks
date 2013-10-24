@@ -39,7 +39,7 @@ public final class IntelLinux32CCompiler extends GccCompatibleCCompiler {
     private IntelLinux32CCompiler(boolean isLibtool,
             IntelLinux32CCompiler libtoolCompiler, boolean newEnvironment,
             Environment env) {
-        super("icc", "-V", isLibtool, libtoolCompiler, newEnvironment, env);
+        super("icc", "-V", false, isLibtool, libtoolCompiler, newEnvironment, env);
     }
     public Processor changeEnvironment(boolean newEnvironment, Environment env) {
         if (newEnvironment || env != null) {

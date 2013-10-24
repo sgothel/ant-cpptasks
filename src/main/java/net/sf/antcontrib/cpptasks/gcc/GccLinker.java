@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Copyright 2002-2004 The Ant-Contrib project
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,136 +15,123 @@
  *  limitations under the License.
  */
 package net.sf.antcontrib.cpptasks.gcc;
+
 import java.io.File;
-import java.util.Vector;
-import java.util.HashSet;
-import java.util.Arrays;
 
 import net.sf.antcontrib.cpptasks.CUtil;
-import net.sf.antcontrib.cpptasks.compiler.LinkType;
-import net.sf.antcontrib.cpptasks.compiler.Linker;
+
 /**
  * Adapter for the GCC linker
- * 
+ *
  * @author Adam Murdoch, et.al.
  */
-public class GccLinker extends AbstractLdLinker {
+public class GccLinker extends GnuLinker {
     private static final String[] discardFiles = new String[0];
     private static final String[] objFiles = new String[]{".o", ".a", ".lib",
             ".dll", ".so", ".sl"};
     private static final String[] libtoolObjFiles = new String[]{".fo", ".a",
             ".lib", ".dll", ".so", ".sl"};
-    private static String[] linkerOptions = new String[]{"-bundle",
+    private static final String[] linkerOptions = new String[]{"-bundle",
             "-dynamiclib", "-nostartfiles", "-nostdlib", "-prebind", "-noprebind", "-s",
             "-static", "-shared", "-symbolic", "-Xlinker",
-            "--export-all-symbols", "-static-libgcc",};    
-    private static String[] darwinLinkerOptions = new String[]{"-arch", "-weak_framework", "-lazy_framework", "-weak_library" };
-    
-    private static final GccLinker dllLinker = new GccLinker("gcc", objFiles, 
+            "--export-all-symbols", "-static-libgcc",};
+
+    private static final GccLinker dllLinker = new GccLinker("gcc", objFiles,
             discardFiles, "lib", ".so", false, new GccLinker("gcc", objFiles, discardFiles, "lib", ".so", true, null));
-    private static final GccLinker dllCLangLinker = new GccLinker("clang", objFiles, 
+    private static final GccLinker dllClangLinker = new GccLinker("clang", objFiles,
             discardFiles, "lib", ".so", false, new GccLinker("clang", objFiles, discardFiles, "lib", ".so", true, null));
-    
+
     private static final GccLinker instance = new GccLinker("gcc", objFiles,
             discardFiles, "", "", false, null);
     private static final GccLinker clangInstance = new GccLinker("clang", objFiles,
             discardFiles, "", "", false, null);
-    
+    private static final GccLinker xcodeClangInstance = new GccLinker(clangInstance, true);
+
     private static final GccLinker machBundleLinker = new GccLinker("gcc",
             objFiles, discardFiles, "lib", ".bundle", false, null);
-    private static final GccLinker machCLangBundleLinker = new GccLinker("clang",
+    private static final GccLinker machClangBundleLinker = new GccLinker("clang",
             objFiles, discardFiles, "lib", ".bundle", false, null);
-    
+    private static final GccLinker xcodeMachClangBundleLinker = new GccLinker(machClangBundleLinker, true);
+
     private static final GccLinker machDllLinker = new GccLinker("gcc",
             objFiles, discardFiles, "lib", ".dylib", false, null);
-    private static final GccLinker machDllCLangLinker = new GccLinker("clang",
+    private static final GccLinker machDllClangLinker = new GccLinker("clang",
             objFiles, discardFiles, "lib", ".dylib", false, null);
-    
+    private static final GccLinker xcodeMachDllClangLinker = new GccLinker(machDllClangLinker, true);
+
     public static GccLinker getInstance() {
         return instance;
     }
-    public static GccLinker getCLangInstance() {
+    public static GccLinker getClangInstance() {
         return clangInstance;
     }
-    private final boolean isGCC;
-    private File[] libDirs;
+    public static GccLinker getXcodeClangInstance() {
+        return xcodeClangInstance;
+    }
+
     protected GccLinker(String command, String[] extensions,
             String[] ignoredExtensions, String outputPrefix,
             String outputSuffix, boolean isLibtool, GccLinker libtoolLinker) {
         super(command, "-dumpversion", extensions, ignoredExtensions,
-                outputPrefix, outputSuffix, isLibtool, libtoolLinker);
-        isGCC = "gcc".equals(command);
+                outputPrefix, outputSuffix, false, isLibtool, libtoolLinker);
     }
-    protected void addImpliedArgs(boolean debug, LinkType linkType, Vector args) {
-        super.addImpliedArgs(debug, linkType, args);
-        if (getIdentifier().indexOf("mingw") >= 0) {
-            if (linkType.isSubsystemConsole()) {
-                args.addElement("-mconsole");
-            }
-            if (linkType.isSubsystemGUI()) {
-                args.addElement("-mwindows");
-            }
-        }
+    protected GccLinker(GccLinker ld, boolean isXCoderun) {
+        super(ld, isXCoderun);
     }
-    /**
-     * Allows drived linker to decorate linker option. Override by GccLinker to
-     * prepend a "-Wl," to pass option to through gcc to linker.
-     * 
-     * @param buf
-     *            buffer that may be used and abused in the decoration process,
-     *            must not be null.
-     * @param arg
-     *            linker argument
-     */
-    public String decorateLinkerOption(StringBuffer buf, String arg) {
-        String decoratedArg = arg;
-        if (arg.startsWith("--sysroot")) {
-          return arg;
-        }
-        if (arg.startsWith("-nostdlib")) {
-          return arg;
-        }
-        if (arg.length() > 1 && arg.charAt(0) == '-') {
-            switch (arg.charAt(1)) {
-                //
-                //   passed automatically by GCC
-                //
-                case 'g' :
-                case 'f' :
-                case 'F' :
-                /* Darwin */
-                case 'm' :
-                case 'O' :
-                case 'W' :
-                case 'l' :
-                case 'L' :
-                case 'u' :
-                case 'v' :
-                    break;
-                default :
-                    boolean known = false;
-                    HashSet allLinkerOptions = new HashSet();
-                    allLinkerOptions.addAll(Arrays.asList(linkerOptions));
-                    if (isDarwin()) {
-                        allLinkerOptions.addAll(Arrays.asList(darwinLinkerOptions));
-                    }
-                    known = allLinkerOptions.contains(arg);
 
-                    if (!known) {
-                        buf.setLength(0);
-                        buf.append("-Wl,");
-                        buf.append(arg);
-                        decoratedArg = buf.toString();
-                    }
-                    break;
-            }
-        }
-        return decoratedArg;
+    @Override
+    protected final String[] getStaticLinkerOptions() { return  linkerOptions; }
+
+    @Override
+    protected final GnuLinker getStaticDllLinker() {
+        return dllLinker;
     }
+    @Override
+    protected final GnuLinker getStaticDllClangLinker() {
+        return dllClangLinker;
+    }
+    @Override
+    protected final GnuLinker getStaticClangInstance() {
+        return clangInstance;
+    }
+    @Override
+    protected final GnuLinker getStaticXcodeClangInstance() {
+        return xcodeClangInstance;
+    }
+    @Override
+    protected final GnuLinker getStaticMachBundleLinker() {
+        return machBundleLinker;
+    }
+    @Override
+    protected final GnuLinker getStaticMachClangBundleLinker() {
+        return machClangBundleLinker;
+    }
+    @Override
+    protected final GnuLinker getStaticXcodeMachClangBundleLinker() {
+        return xcodeMachClangBundleLinker;
+    }
+    @Override
+    protected final GnuLinker getStaticMachDllLinker() {
+        return machDllLinker;
+    }
+    @Override
+    protected final GnuLinker getStaticMachDllClangLinker() {
+        return machDllClangLinker;
+    }
+    @Override
+    protected final GnuLinker getStaticXcodeMachDllClangLinker() {
+        return xcodeMachDllClangLinker;
+    }
+    @Override
+    protected final GnuLinker getStaticInstance() {
+        return instance;
+    }
+
     /**
      * Returns library path.
-     *  
+     *
      */
+    @Override
     public File[] getLibraryPath() {
         if (libDirs == null) {
             //
@@ -157,8 +144,8 @@ public class GccLinker extends AbstractLdLinker {
             //
             //   build default path from gcc and system /lib and /lib/w32api
             //
-            String[] impliedLibPath = new String[]{buf.toString(),
-                    "/lib/w32api", "/lib"};
+            // String[] impliedLibPath = new String[]{buf.toString(), "/lib/w32api", "/lib"};
+
             //
             //     read gcc specs file for other library paths
             //
@@ -213,25 +200,5 @@ public class GccLinker extends AbstractLdLinker {
             }
         }
         return libDirs;
-    }
-    public Linker getLinker(LinkType type) {
-        if (type.isStaticLibrary()) {
-            return GccLibrarian.getInstance(); // uses 'ar', which is 'gcc' agnostic
-        }
-        if (type.isPluginModule()) {
-            if (isDarwin()) {
-                return isGCC ? machBundleLinker : machCLangBundleLinker;
-            } else {
-                return isGCC ? dllLinker : dllCLangLinker;
-            }
-        }
-        if (type.isSharedLibrary()) {
-            if (isDarwin()) {
-                return isGCC ? machDllLinker : machDllCLangLinker;
-            } else {
-                return isGCC ? dllLinker : dllCLangLinker;
-            }
-        }
-        return isGCC ? instance : clangInstance;
     }
 }

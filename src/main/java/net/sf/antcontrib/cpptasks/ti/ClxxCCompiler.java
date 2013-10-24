@@ -71,7 +71,7 @@ public class ClxxCCompiler extends CommandLineCCompiler {
     private ClxxCCompiler(String command, boolean newEnvironment,
             Environment env) {
         super(command, "-h", sourceExtensions, headerExtensions, ".o", false,
-                null, newEnvironment, env);
+                false, null, newEnvironment, env);
     }
     /*
      * (non-Javadoc)

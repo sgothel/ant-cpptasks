@@ -57,7 +57,7 @@ public class GccLinker extends AbstractLdLinker {
             String[] ignoredExtensions, String outputPrefix,
             String outputSuffix, boolean isLibtool, GccLinker libtoolLinker) {
         super(command, "-dumpversion", extensions, ignoredExtensions,
-                outputPrefix, outputSuffix, isLibtool, libtoolLinker);
+                outputPrefix, outputSuffix, false, isLibtool, libtoolLinker);
     }
     protected void addImpliedArgs(boolean debug, LinkType linkType, Vector args) {
         super.addImpliedArgs(debug, linkType, args);

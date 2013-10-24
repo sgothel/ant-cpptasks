@@ -39,7 +39,7 @@ public final class IntelLinux64CCompiler extends GccCompatibleCCompiler {
     private IntelLinux64CCompiler(boolean isLibtool,
             IntelLinux64CCompiler libtoolCompiler, boolean newEnvironment,
             Environment env) {
-        super("ecc", "-V", isLibtool, libtoolCompiler, newEnvironment, env);
+        super("ecc", "-V", false, isLibtool, libtoolCompiler, newEnvironment, env);
     }
     public Processor changeEnvironment(boolean newEnvironment, Environment env) {
         if (newEnvironment || env != null) {

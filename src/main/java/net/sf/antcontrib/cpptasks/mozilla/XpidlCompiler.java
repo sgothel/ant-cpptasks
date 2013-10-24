@@ -64,7 +64,7 @@ public final class XpidlCompiler
   private XpidlCompiler(final boolean newEnvironment,
                         final Environment env) {
     super("xpidl", null, new String[] {".idl", ".xpidl"}
-          , new String[0], ".xpt", false, null, newEnvironment, env);
+          , new String[0], ".xpt", false, false, null, newEnvironment, env);
   }
 
   /**

@@ -40,7 +40,7 @@ public final class DevStudioMIDLCompiler extends CommandLineCompiler {
     }
     private DevStudioMIDLCompiler(boolean newEnvironment, Environment env) {
         super("midl", null, new String[]{".idl", ".odl"}, new String[]{},
-                ".tlb", false, null, newEnvironment, env);
+                ".tlb", false, false, null, newEnvironment, env);
     }
     protected void addImpliedArgs(final Vector args, 
     		final boolean debug,

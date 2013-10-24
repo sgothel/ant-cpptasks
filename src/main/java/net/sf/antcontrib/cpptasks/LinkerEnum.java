@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Copyright 2002-2004 The Ant-Contrib project
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,16 +40,18 @@ import net.sf.antcontrib.cpptasks.openwatcom.OpenWatcomFortranLinker;
 
 /**
  * Enumeration of supported linkers
- * 
+ *
  * @author Curt Arnold, et.al.
- *  
+ *
  */
 public class LinkerEnum extends EnumeratedAttribute {
     private final static ProcessorEnumValue[] linkers = new ProcessorEnumValue[]{
             new ProcessorEnumValue("gcc", GccLinker.getInstance()),
             new ProcessorEnumValue("g++", GppLinker.getInstance()),
-            new ProcessorEnumValue("clang", GccLinker.getCLangInstance()),
-            new ProcessorEnumValue("clang++", GppLinker.getCLangInstance()),
+            new ProcessorEnumValue("clang", GccLinker.getClangInstance()),
+            new ProcessorEnumValue("clang++", GppLinker.getClangInstance()),
+            new ProcessorEnumValue("xcode.clang", GccLinker.getXcodeClangInstance()),
+            new ProcessorEnumValue("xcode.clang++", GppLinker.getXcodeClangInstance()),
             new ProcessorEnumValue("ld", LdLinker.getInstance()),
             new ProcessorEnumValue("ar", GccLibrarian.getInstance()),
             new ProcessorEnumValue("msvc", DevStudioLinker.getInstance()),

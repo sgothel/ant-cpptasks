@@ -41,7 +41,7 @@ public final class C89Linker extends CommandLineLinker {
     private String outputPrefix;
     private C89Linker(String outputPrefix, String outputSuffix) {
         super("ld", "/bogus", new String[]{".o", ".a", ".lib", ".x"},
-                new String[]{}, outputSuffix, false, null);
+                new String[]{}, outputSuffix, false, false, null);
         this.outputPrefix = outputPrefix;
     }
     protected void addBase(long base, Vector args) {

@@ -105,8 +105,8 @@ public final class GccCCompiler extends GccCompatibleCCompiler {
             String[] headerExtensions, boolean isLibtool,
             GccCCompiler libtoolCompiler, boolean newEnvironment,
             Environment env) {
-        super(command, null, sourceExtensions, headerExtensions, isLibtool,
-                libtoolCompiler, newEnvironment, env);
+        super(command, null, sourceExtensions, headerExtensions, false,
+                isLibtool, libtoolCompiler, newEnvironment, env);
         isPICMeaningful = System.getProperty("os.name").indexOf("Windows") < 0;
     }
     public void addImpliedArgs(final Vector args, 

@@ -52,13 +52,13 @@ public final class OS390Linker extends CommandLineLinker {
     CCTask task;
     private OS390Linker() {
         super("cxx", "/bogus", new String[]{".o", ".a", ".lib", ".xds"},
-                new String[]{".dll", ".x"}, ".xds", false, null);
+                new String[]{".dll", ".x"}, ".xds", false, false, null);
         this.outputPrefix = "";
         this.isADatasetLinker = true;
     }
     private OS390Linker(String outputPrefix, String outputSuffix) {
         super("cxx", "/bogus", new String[]{".o", ".a", ".lib", ".x"},
-                new String[]{".dll"}, outputSuffix, false, null);
+                new String[]{".dll"}, outputSuffix, false, false, null);
         this.outputPrefix = outputPrefix;
         this.isADatasetLinker = false;
     }

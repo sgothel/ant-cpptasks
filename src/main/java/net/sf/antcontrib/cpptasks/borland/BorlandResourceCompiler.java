@@ -43,8 +43,8 @@ public class BorlandResourceCompiler extends CommandLineCompiler {
     }
     private BorlandResourceCompiler(boolean newEnvironment, Environment env) {
         super("brc32", "c:\\__bogus\\__bogus.rc", new String[]{".rc"},
-                new String[]{".h", ".hpp", ".inl"}, ".res", false, null,
-                newEnvironment, env);
+                new String[]{".h", ".hpp", ".inl"}, ".res", false, false,
+                null, newEnvironment, env);
     }
     protected void addImpliedArgs(final Vector args, 
     		final boolean debug,

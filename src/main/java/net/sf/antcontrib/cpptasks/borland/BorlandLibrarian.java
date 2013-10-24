@@ -40,7 +40,7 @@ public class BorlandLibrarian extends CommandLineLinker {
     }
     private BorlandLibrarian() {
         super("tlib", "--version", new String[]{".obj"}, new String[0], ".lib", false,
-                null);
+                false, null);
     }
     protected void addBase(long base, Vector args) {
     }

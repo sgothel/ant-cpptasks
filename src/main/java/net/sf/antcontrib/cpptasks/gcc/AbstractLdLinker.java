@@ -33,14 +33,18 @@ import net.sf.antcontrib.cpptasks.types.LibraryTypeEnum;
  * @author Curt Arnold
  */
 public abstract class AbstractLdLinker extends CommandLineLinker {
-    private String outputPrefix;
+    private final String outputPrefix;
     protected AbstractLdLinker(String command, String identifierArg,
             String[] extensions, String[] ignoredExtensions,
-            String outputPrefix, String outputSuffix, boolean isLibtool,
-            AbstractLdLinker libtoolLinker) {
+            String outputPrefix, String outputSuffix, boolean isXCoderun,
+            boolean isLibtool, AbstractLdLinker libtoolLinker) {
         super(command, identifierArg, extensions, ignoredExtensions,
-                outputSuffix, isLibtool, libtoolLinker);
+                outputSuffix, isXCoderun, isLibtool, libtoolLinker);
         this.outputPrefix = outputPrefix;
+    }
+    protected AbstractLdLinker(AbstractLdLinker ld, boolean isXCoderun) {
+        super(ld, isXCoderun);
+        this.outputPrefix = ld.outputPrefix;
     }
     public void addBase(long base, Vector args) {
             if (base >= 0) {
@@ -292,7 +296,7 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
         //
         //   null out any sources that correspond to library names
         //
-        String[] localSources = (String[]) sourceFiles.clone();
+        String[] localSources = sourceFiles.clone();
         int extra = 0;
         for (int i = 0; i < libnames.length; i++) {
             String libname = libnames[i];

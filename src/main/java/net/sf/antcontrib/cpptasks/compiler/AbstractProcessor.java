@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Copyright 2002-2004 The Ant-Contrib project
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,7 @@ package net.sf.antcontrib.cpptasks.compiler;
 import org.apache.tools.ant.types.Environment;
 /**
  * An abstract processor (compiler/linker) implementation.
- * 
+ *
  * @author Curt Arnold
  */
 public abstract class AbstractProcessor implements Processor, Cloneable {
@@ -34,7 +34,7 @@ public abstract class AbstractProcessor implements Processor, Cloneable {
     /**
      * Determines the identification of a command line processor by capture the
      * first line of its output for a specific command.
-     * 
+     *
      * @param command
      *            array of command line arguments starting with executable
      *            name. For example, { "cl" }
@@ -59,12 +59,16 @@ public abstract class AbstractProcessor implements Processor, Cloneable {
     private final String[] sourceExtensions;
     protected AbstractProcessor(String[] sourceExtensions,
             String[] headerExtensions) {
-        this.sourceExtensions = (String[]) sourceExtensions.clone();
-        this.headerExtensions = (String[]) headerExtensions.clone();
+        this.sourceExtensions = sourceExtensions.clone();
+        this.headerExtensions = headerExtensions.clone();
+    }
+    protected AbstractProcessor(AbstractProcessor ap) {
+        this.sourceExtensions = ap.sourceExtensions.clone();
+        this.headerExtensions = ap.headerExtensions.clone();
     }
     /**
      * Returns the bid of the processor for the file.
-     * 
+     *
      * @param inputFile
      *            filename of input file
      * @return bid for the file, 0 indicates no interest, 1 indicates that the
@@ -92,12 +96,12 @@ public abstract class AbstractProcessor implements Processor, Cloneable {
         return super.clone();
     }
     public String[] getHeaderExtensions() {
-        return (String[]) this.headerExtensions.clone();
+        return this.headerExtensions.clone();
     }
     abstract public String getIdentifier();
     /**
      * Gets the target operating system architecture
-     * 
+     *
      * @return String target operating system architecture
      */
     protected String getOSArch() {
@@ -105,18 +109,18 @@ public abstract class AbstractProcessor implements Processor, Cloneable {
     }
     /**
      * Gets the target operating system name
-     * 
+     *
      * @return String target operating system name
      */
     protected String getOSName() {
         return System.getProperty("os.name");
     }
     public String[] getSourceExtensions() {
-        return (String[]) this.sourceExtensions.clone();
+        return this.sourceExtensions.clone();
     }
     /**
      * Returns true if the target operating system is Mac OS X or Darwin.
-     * 
+     *
      * @return boolean
      */
     protected boolean isDarwin() {

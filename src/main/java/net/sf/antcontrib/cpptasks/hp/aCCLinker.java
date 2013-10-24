@@ -44,7 +44,7 @@ public final class aCCLinker extends AbstractLdLinker {
     private aCCLinker(String command, String[] extensions,
             String[] ignoredExtensions, String outputPrefix, String outputSuffix) {
         super(command, "-help", extensions, ignoredExtensions, outputPrefix,
-                outputSuffix, false, null);
+                outputSuffix, false, false, null);
     }
     public void addImpliedArgs(boolean debug, LinkType linkType, Vector args) {
         if (debug) {

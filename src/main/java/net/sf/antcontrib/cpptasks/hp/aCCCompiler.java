@@ -54,7 +54,7 @@ public final class aCCCompiler extends GccCompatibleCCompiler {
             String[] headerExtensions, boolean newEnvironment, 
             Environment env) {
         super(command, "-help", sourceExtensions, headerExtensions, false, 
-                null, newEnvironment, env);
+                false, null, newEnvironment, env);
     }
     public void addImpliedArgs(Vector args, boolean debug,
             boolean multithreaded, boolean exceptions, LinkType linkType,

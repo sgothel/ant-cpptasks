@@ -109,7 +109,7 @@ public class ADSCCompiler extends CommandLineCCompiler {
      */
     private ADSCCompiler(String command, boolean newEnvironment, Environment env) {
         super(command, "-vsn", sourceExtensions, headerExtensions, ".o", false,
-                null, newEnvironment, env);
+                false, null, newEnvironment, env);
     }
     /**
      * {@inheritDoc}

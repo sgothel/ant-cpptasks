@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Copyright 2001-2004 The Ant-Contrib project
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +28,7 @@ import net.sf.antcontrib.cpptasks.VersionInfo;
 import org.apache.tools.ant.types.Environment;
 /**
  * An abstract Linker implementation.
- * 
+ *
  * @author Adam Murdoch
  */
 public abstract class AbstractLinker extends AbstractProcessor
@@ -37,11 +37,14 @@ public abstract class AbstractLinker extends AbstractProcessor
     public AbstractLinker(String[] objExtensions, String[] ignoredExtensions) {
         super(objExtensions, ignoredExtensions);
     }
+    public AbstractLinker(AbstractLinker ld) {
+        super(ld);
+    }
     /**
      * Returns the bid of the processor for the file.
-     * 
+     *
      * A linker will bid 1 on any unrecognized file type.
-     * 
+     *
      * @param inputFile
      *            filename of input file
      * @return bid for the file, 0 indicates no interest, 1 indicates that the
@@ -86,12 +89,12 @@ public abstract class AbstractLinker extends AbstractProcessor
         return libfile.getName();
     }
     public abstract String[] getOutputFileNames(String fileName, VersionInfo versionInfo);
-    
-    
+
+
     /**
      * Adds source or object files to the bidded fileset to
      * support version information.
-     * 
+     *
      * @param versionInfo version information
      * @param linkType link type
      * @param isDebug true if debug build
@@ -99,11 +102,11 @@ public abstract class AbstractLinker extends AbstractProcessor
      * @param objDir directory for generated files
      * @param matcher bidded fileset
      */
-	public void addVersionFiles(final VersionInfo versionInfo, 
+	public void addVersionFiles(final VersionInfo versionInfo,
 			final LinkType linkType,
 			final File outputFile,
 			final boolean isDebug,
-			final File objDir, 
+			final File objDir,
 			final TargetMatcher matcher) throws IOException {
 		if (versionInfo == null) {
 			throw new NullPointerException("versionInfo");
@@ -118,5 +121,5 @@ public abstract class AbstractLinker extends AbstractProcessor
 			throw new NullPointerException("objDir");
 		}
 	}
-    
+
 }

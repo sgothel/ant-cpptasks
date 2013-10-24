@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Copyright 2002-2008 The Ant-Contrib project
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,7 +46,7 @@ import net.sf.antcontrib.cpptasks.openwatcom.OpenWatcomFortranCompiler;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 /**
  * Enumeration of supported compilers
- * 
+ *
  * <table width="100%" border="1"> <thead>Supported compilers </thead>
  * <tr>
  * <td>gcc (default)</td>
@@ -57,12 +57,20 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * <td>clang / llvm C compiler</td>
  * </tr>
  * <tr>
+ * <td>xcode.clang</td>
+ * <td>Xcode clang / llvm C compiler (via xcrun)</td>
+ * </tr>
+ * <tr>
  * <td>g++</td>
  * <td>GCC C++ compiler</td>
  * </tr>
  * <tr>
  * <td>clang++</td>
  * <td>clang++ / llvm C++ compiler</td>
+ * </tr>
+ * <tr>
+ * <td>xcode.clang++</td>
+ * <td>Xcode clang++ / llvm C++ compiler (via xcrun)</td>
  * </tr>
  * <tr>
  * <td>c++</td>
@@ -189,9 +197,9 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * <td>GNU windres resource compiler</td>
  * </tr>
  * </table>
- * 
+ *
  * @author Curt Arnold, et.al.
- *  
+ *
  */
 public class CompilerEnum extends EnumeratedAttribute {
     private final static ProcessorEnumValue[] compilers = new ProcessorEnumValue[]{
@@ -199,6 +207,8 @@ public class CompilerEnum extends EnumeratedAttribute {
             new ProcessorEnumValue("g++", GccCCompiler.getGppInstance()),
             new ProcessorEnumValue("clang", GccCCompiler.getCLangInstance()),
             new ProcessorEnumValue("clang++", GccCCompiler.getCPPLangInstance()),
+            new ProcessorEnumValue("xcode.clang", GccCCompiler.getXCodeCLangInstance()),
+            new ProcessorEnumValue("xcode.clang++", GccCCompiler.getXCodeCPPLangInstance()),
             new ProcessorEnumValue("c++", GccCCompiler.getCppInstance()),
             new ProcessorEnumValue("g77", GccCCompiler.getG77Instance()),
             new ProcessorEnumValue("msvc", DevStudioCCompiler.getInstance()),

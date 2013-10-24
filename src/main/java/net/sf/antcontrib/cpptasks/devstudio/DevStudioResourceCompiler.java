@@ -42,7 +42,7 @@ public final class DevStudioResourceCompiler extends CommandLineCompiler {
     private String identifier;
     private DevStudioResourceCompiler(boolean newEnvironment, Environment env) {
         super("rc", null, new String[]{".rc"}, new String[]{".h", ".hpp",
-                ".inl"}, ".res", false, null, newEnvironment, env);
+                ".inl"}, ".res", false, false, null, newEnvironment, env);
     }
     protected void addImpliedArgs(final Vector args, 
     		final boolean debug,

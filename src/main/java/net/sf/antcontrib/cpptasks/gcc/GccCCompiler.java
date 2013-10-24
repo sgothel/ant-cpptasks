@@ -53,28 +53,28 @@ public final class GccCCompiler extends GccCompatibleCCompiler {
     ".inl"};
     private static final GccCCompiler cppInstance = new GccCCompiler("c++",
             sourceExtensions, headerExtensions, false,
-            new GccCCompiler("c++", sourceExtensions, headerExtensions, true,
-                    null, false, null), false, null);
+            false, new GccCCompiler("c++", sourceExtensions, headerExtensions, false,
+                            true, null, false, null), false, null);
     private static final GccCCompiler g77Instance = new GccCCompiler("g77",
             sourceExtensions, headerExtensions, false,
-            new GccCCompiler("g77", sourceExtensions, headerExtensions, true,
-                    null, false, null), false, null);
+            false, new GccCCompiler("g77", sourceExtensions, headerExtensions, false,
+                            true, null, false, null), false, null);
     private static final GccCCompiler gppInstance = new GccCCompiler("g++",
             sourceExtensions, headerExtensions, false,
-            new GccCCompiler("g++", sourceExtensions, headerExtensions, true,
-                    null, false, null), false, null);
+            false, new GccCCompiler("g++", sourceExtensions, headerExtensions, false,
+                            true, null, false, null), false, null);
     private static final GccCCompiler instance = new GccCCompiler("gcc",
             sourceExtensions, headerExtensions, false,
-            new GccCCompiler("gcc", sourceExtensions, headerExtensions, true,
-                    null, false, null), false, null);
+            false, new GccCCompiler("gcc", sourceExtensions, headerExtensions, false,
+                            true, null, false, null), false, null);
     private static final GccCCompiler clangInstance = new GccCCompiler("clang",
             sourceExtensions, headerExtensions, false,
-            new GccCCompiler("clang", sourceExtensions, headerExtensions, true,
-                    null, false, null), false, null);
+            false, new GccCCompiler("clang", sourceExtensions, headerExtensions, false,
+                            true, null, false, null), false, null);
     private static final GccCCompiler cpplangInstance = new GccCCompiler("clang++",
             sourceExtensions, headerExtensions, false,
-            new GccCCompiler("clang++", sourceExtensions, headerExtensions, true,
-                    null, false, null), false, null);
+            false, new GccCCompiler("clang++", sourceExtensions, headerExtensions, false,
+                            true, null, false, null), false, null);
     /**
      * Gets c++ adapter
      */
@@ -111,21 +111,53 @@ public final class GccCCompiler extends GccCompatibleCCompiler {
     public static GccCCompiler getCPPLangInstance() {
         return cpplangInstance;
     }
+    /**
+     * Gets XCode clang adapter
+     */
+    public static GccCCompiler getXCodeCLangInstance() {
+        return createXCodeRun(clangInstance);
+    }
+    /**
+     * Gets clang++ adapter
+     */
+    public static GccCCompiler getXCodeCPPLangInstance() {
+        return createXCodeRun(cpplangInstance);
+    }
     private String identifier;
     private File[] includePath;
     private boolean isPICMeaningful = true;
     /**
      * Private constructor. Use GccCCompiler.getInstance() to get singleton
      * instance of this class.
+     * @param isXCoderun TODO
      */
     private GccCCompiler(String command, String[] sourceExtensions,
-            String[] headerExtensions, boolean isLibtool,
-            GccCCompiler libtoolCompiler, boolean newEnvironment,
-            Environment env) {
-        super(command, null, sourceExtensions, headerExtensions, isLibtool,
-                libtoolCompiler, newEnvironment, env);
+            String[] headerExtensions, boolean isXCoderun,
+            boolean isLibtool, GccCCompiler libtoolCompiler,
+            boolean newEnvironment, Environment env) {
+        super(command, null, sourceExtensions, headerExtensions, isXCoderun,
+                isLibtool, libtoolCompiler, newEnvironment, env);
         isPICMeaningful = System.getProperty("os.name").indexOf("Windows") < 0;
     }
+    private GccCCompiler(GccCCompiler cc, boolean isXcoderun) {
+        super(cc, isXcoderun);
+        isPICMeaningful = cc.isPICMeaningful;
+    }
+    private static GccCCompiler createXCodeRun(GccCCompiler cc) {
+        /**
+        super(command, null, sourceExtensions, headerExtensions, isXCoderun,
+                isLibtool, libtoolCompiler, newEnvironment, env);
+                */
+        final GccCCompiler libtoolCC = (GccCCompiler)cc.getLibtoolCompiler();
+        final GccCCompiler libtoolCCXCR;
+        if( null != libtoolCC ) {
+            libtoolCCXCR = new GccCCompiler(libtoolCC, true /* isXCoderun */);
+        } else {
+            libtoolCCXCR = null;
+        }
+        return new GccCCompiler(cc, true /* isXCoderun */);
+    }
+
     public void addImpliedArgs(final Vector args,
     		final boolean debug,
             final boolean multithreaded,
@@ -142,9 +174,9 @@ public final class GccCCompiler extends GccCompatibleCCompiler {
     public Processor changeEnvironment(boolean newEnvironment, Environment env) {
         if (newEnvironment || env != null) {
             return new GccCCompiler(getCommand(), this.getSourceExtensions(),
-                    this.getHeaderExtensions(), this.getLibtool(),
-                    (GccCCompiler) this.getLibtoolCompiler(), newEnvironment,
-                    env);
+                    this.getHeaderExtensions(), false,
+                    this.getLibtool(), (GccCCompiler) this.getLibtoolCompiler(),
+                    newEnvironment, env);
         }
         return this;
     }
@@ -234,7 +266,7 @@ public final class GccCCompiler extends GccCompatibleCCompiler {
                 }
             }
         }
-        return (File[]) includePath.clone();
+        return includePath.clone();
     }
     public String getIdentifier() throws BuildException {
         if (identifier == null) {

@@ -34,7 +34,7 @@ public abstract class CommandLineFortranCompiler extends CommandLineCompiler {
             CommandLineFortranCompiler libtoolCompiler, boolean newEnvironment,
             Environment env) {
         super(command, identifierArg, sourceExtensions, headerExtensions,
-                outputSuffix, libtool, libtoolCompiler, newEnvironment, env);
+                outputSuffix, false, libtool, libtoolCompiler, newEnvironment, env);
     }
     protected Parser createParser(File source) {
         return new FortranParser();

@@ -44,8 +44,8 @@ public class OS390CCompiler extends CommandLineCCompiler {
     }
     private OS390CCompiler(boolean newEnvironment, Environment env) {
         super("cxx", null, new String[]{".c", ".cc", ".cpp", ".cxx", ".c++",
-                ".s"}, new String[]{".h", ".hpp"}, ".o", false, null,
-                newEnvironment, env);
+                ".s"}, new String[]{".h", ".hpp"}, ".o", false, false,
+                null, newEnvironment, env);
     }
     protected void addImpliedArgs(final Vector args, 
     		final boolean debug,

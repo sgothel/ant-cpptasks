@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Copyright 2002-2004 The Ant-Contrib project
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,29 +45,40 @@ import org.apache.tools.ant.types.Environment;
 public abstract class CommandLineLinker extends AbstractLinker
 {
     private String command;
-    private Environment env = null;
+    private final Environment env = null;
     private String identifier;
-    private String identifierArg;
-    private boolean isLibtool;
+    private final String identifierArg;
+    private final boolean isLibtool, isXcoderun;
     private String[] librarySets;
-    private CommandLineLinker libtoolLinker;
-    private boolean newEnvironment = false;
-    private String outputSuffix;
+    private final CommandLineLinker libtoolLinker;
+    private final boolean newEnvironment = false;
+    private final String outputSuffix;
 
 
-    /** Creates a comand line linker invocation */
+    /** Creates a comand line linker invocation
+     * @param isXCoderun TODO*/
     public CommandLineLinker(String command,
         String identifierArg,
         String[] extensions,
         String[] ignoredExtensions, String outputSuffix,
-        boolean isLibtool, CommandLineLinker libtoolLinker)
+        boolean isXCoderun, boolean isLibtool, CommandLineLinker libtoolLinker)
     {
         super(extensions, ignoredExtensions);
         this.command = command;
         this.identifierArg = identifierArg;
         this.outputSuffix = outputSuffix;
         this.isLibtool = isLibtool;
+        this.isXcoderun = isXCoderun;
         this.libtoolLinker = libtoolLinker;
+    }
+    public CommandLineLinker(CommandLineLinker ld, boolean isXCoderun) {
+        super(ld);
+        this.command = ld.command;
+        this.identifierArg = ld.identifierArg;
+        this.outputSuffix = ld.outputSuffix;
+        this.isLibtool = ld.isLibtool;
+        this.isXcoderun = isXCoderun;
+        this.libtoolLinker = ld.libtoolLinker;
     }
     protected abstract void addBase(long base, Vector args);
 
@@ -87,7 +98,7 @@ public abstract class CommandLineLinker extends AbstractLinker
     protected abstract void addMap(boolean map, Vector args);
     protected abstract void addStack(int stack, Vector args);
     protected abstract void addEntry(String entry, Vector args);
-    
+
     protected LinkerConfiguration createConfiguration(
       CCTask task,
       LinkType linkType,
@@ -229,6 +240,12 @@ public abstract class CommandLineLinker extends AbstractLinker
       return null;
     }
 
+    protected final boolean getLibtool() {
+        return isLibtool;
+    }
+    protected final boolean getXcodeRun() {
+        return isXcoderun;
+    }
     /**
      * Performs a link using a command line linker
      *
@@ -265,8 +282,8 @@ public abstract class CommandLineLinker extends AbstractLinker
             throw new BuildException(ex);
           }
         }
-        
-        int retval = runCommand(task,parentDir,execArgs);        
+
+        int retval = runCommand(task,parentDir,execArgs);
         //
         //   if the process returned a failure code then
         //       throw an BuildException
@@ -277,7 +294,7 @@ public abstract class CommandLineLinker extends AbstractLinker
           //
           throw new BuildException(this.getCommand() + " failed with return code " + retval, task.getLocation());
         }
-        
+
     }
 
 
@@ -297,7 +314,7 @@ public abstract class CommandLineLinker extends AbstractLinker
         String outputFile,
         String[] sourceFiles,
         CommandLineLinkerConfiguration config) {
-                        
+
         String[] preargs = config.getPreArguments();
         String[] endargs = config.getEndArguments();
         String outputSwitch[] =  getOutputFileSwitch(task, outputFile);
@@ -306,10 +323,16 @@ public abstract class CommandLineLinker extends AbstractLinker
         if (isLibtool) {
           allArgsCount++;
         }
+        if(isXcoderun) {
+          allArgsCount++;
+        }
         String[] allArgs = new String[allArgsCount];
         int index = 0;
         if (isLibtool) {
           allArgs[index++] = "libtool";
+        }
+        if(isXcoderun) {
+          allArgs[index++] = "xcrun";
         }
         allArgs[index++] = this.getCommand();
         StringBuffer buf = new StringBuffer();
@@ -354,6 +377,9 @@ public abstract class CommandLineLinker extends AbstractLinker
         FileWriter writer = new FileWriter(commandFile);
         int execArgCount = 1;
         if (isLibtool) {
+          execArgCount++;
+        }
+        if(isXcoderun) {
           execArgCount++;
         }
         String[] execArgs = new String[execArgCount+1];

@@ -51,7 +51,7 @@ public abstract class OpenWatcomCompiler
                                final Environment env) {
     super(command, identifierArg, sourceExtensions,
           headerExtensions, ".obj", false,
-          null, newEnvironment, env);
+          false, null, newEnvironment, env);
   }
 
   /**
