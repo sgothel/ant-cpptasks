@@ -25,10 +25,5 @@
 			<type>2</type>
 			<location>/usr/local/projects/JOGL/ant-cpptasks/target/classes</location>
 		</link>
-		<link>
-			<name>java</name>
-			<type>2</type>
-			<location>/usr/local/projects/JOGL/ant-cpptasks/src/main/java</location>
-		</link>
 	</linkedResources>
 </projectDescription>
