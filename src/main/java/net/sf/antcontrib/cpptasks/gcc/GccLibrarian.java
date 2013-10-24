@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Copyright 2002-2004 The Ant-Contrib project
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@ import net.sf.antcontrib.cpptasks.compiler.LinkType;
 import net.sf.antcontrib.cpptasks.compiler.Linker;
 /**
  * Adapter for the 'ar' archiver
- * 
+ *
  * @author Adam Murdoch
  */
 public final class GccLibrarian extends AbstractArLibrarian {

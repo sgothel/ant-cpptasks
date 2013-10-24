@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Copyright 2002-2004 The Ant-Contrib project
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,7 +37,7 @@ import org.apache.tools.ant.types.FlexInteger;
  * A linker definition. linker elements may be placed either as children of a
  * cc element or the project element. A linker element with an id attribute may
  * be referenced by linker elements with refid or extends attributes.
- * 
+ *
  * @author Adam Murdoch
  * @author Curt Arnold
  */
@@ -52,7 +52,7 @@ public class LinkerDef extends ProcessorDef {
     private final Vector sysLibrarySets = new Vector();
     /**
      * Default constructor
-     * 
+     *
      * @see java.lang.Object#Object()
      */
     public LinkerDef() {
@@ -114,7 +114,7 @@ public class LinkerDef extends ProcessorDef {
         }
         sysLibrarySets.addElement(libset);
     }
-    
+
     public void execute() throws org.apache.tools.ant.BuildException {
         throw new org.apache.tools.ant.BuildException(
                 "Not an actual task, but looks like one for documentation purposes");
@@ -123,7 +123,7 @@ public class LinkerDef extends ProcessorDef {
      * Returns an array of active library sets for this linker definition.
      */
     public LibrarySet[] getActiveLibrarySets(LinkerDef[] defaultProviders,
-            int index) {    	
+            int index) {
         if (isReference()) {
             return ((LinkerDef) getCheckedRef(LinkerDef.class, "LinkerDef"))
                     .getActiveUserLibrarySets(defaultProviders, index);
@@ -257,12 +257,12 @@ public class LinkerDef extends ProcessorDef {
         }
         return linker;
     }
-    
+
     public Processor getProcessor(LinkType linkType) {
       Processor proc = getProcessor();
       return proc.getLinker(linkType);
     }
-   
+
     public int getStack(LinkerDef[] defaultProviders, int index) {
         if (isReference()) {
             return ((LinkerDef) getCheckedRef(LinkerDef.class, "LinkerDef"))
@@ -278,10 +278,10 @@ public class LinkerDef extends ProcessorDef {
     }
     /**
      * Sets the base address. May be specified in either decimal or hex.
-     * 
+     *
      * @param base
      *            base address
-     *  
+     *
      */
     public void setBase(FlexLong base) {
         if (isReference()) {
@@ -291,7 +291,7 @@ public class LinkerDef extends ProcessorDef {
     }
     /**
      * Sets the starting address.
-     * 
+     *
      * @param entry
      *            function name
      */
@@ -312,7 +312,7 @@ public class LinkerDef extends ProcessorDef {
     }
     /**
      * If true, allows incremental linking.
-     *  
+     *
      */
     public void setIncremental(boolean incremental) {
         if (isReference()) {
@@ -331,8 +331,8 @@ public class LinkerDef extends ProcessorDef {
     }
     /**
      * Sets linker type.
-     * 
-     * 
+     *
+     *
      * <table width="100%" border="1"> <thead>Supported linkers </thead>
      * <tr>
      * <td>gcc</td>
@@ -415,7 +415,7 @@ public class LinkerDef extends ProcessorDef {
 	 * <td>OpenWatcom FORTRAN linker</td>
 	 * </tr>
      * </table>
-     *  
+     *
      */
     public void setName(LinkerEnum name) throws BuildException {
         if (isReference()) {
