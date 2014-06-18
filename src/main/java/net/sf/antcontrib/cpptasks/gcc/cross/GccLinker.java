@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Copyright 2001-2004 The Ant-Contrib project
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +27,7 @@ import net.sf.antcontrib.cpptasks.gcc.AbstractLdLinker;
 import org.apache.tools.ant.BuildException;
 /**
  * Adapter for the GCC linker
- * 
+ *
  * @author Adam Murdoch
  */
 public class GccLinker extends AbstractLdLinker {
@@ -44,7 +44,7 @@ public class GccLinker extends AbstractLdLinker {
     private static String[] linkerOptions = new String[]{"-bundle",
             "-dynamiclib", "-nostartfiles", "-nostdlib", "-prebind", "-s",
             "-static", "-shared", "-symbolic", "-Xlinker",
-            "--export-all-symbols", "-static-libgcc",};
+            "--export-all-symbols", "-static-libgcc", "-static-libstdc++",};
     private static final GccLinker machBundleLinker = new GccLinker("gcc",
             objFiles, discardFiles, "lib", ".bundle", false, null);
     private static final GccLinker machDllLinker = new GccLinker("gcc",
@@ -77,7 +77,7 @@ public class GccLinker extends AbstractLdLinker {
     /**
      * Allows drived linker to decorate linker option. Override by GccLinker to
      * prepend a "-Wl," to pass option to through gcc to linker.
-     * 
+     *
      * @param buf
      *            buffer that may be used and abused in the decoration process,
      *            must not be null.
@@ -124,7 +124,7 @@ public class GccLinker extends AbstractLdLinker {
     }
     /**
      * Returns library path.
-     *  
+     *
      */
     public File[] getLibraryPath() {
         if (libDirs == null) {
