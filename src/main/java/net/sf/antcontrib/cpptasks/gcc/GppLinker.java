@@ -90,13 +90,13 @@ public class GppLinker extends GnuLinker {
         return xcodeClangInstance;
     }
     private String runtimeLibrary;
-    protected GppLinker(String command, String[] extensions,
-            String[] ignoredExtensions, String outputPrefix,
-            String outputSuffix, boolean isXCoderun, boolean isLibtool, GppLinker libtoolLinker) {
+    protected GppLinker(final String command, final String[] extensions,
+            final String[] ignoredExtensions, final String outputPrefix,
+            final String outputSuffix, final boolean isXCoderun, final boolean isLibtool, final GppLinker libtoolLinker) {
         super(command, "-dumpversion", extensions, ignoredExtensions,
                 outputPrefix, outputSuffix, false, isLibtool, libtoolLinker);
     }
-    protected GppLinker(GppLinker ld, boolean isXCoderun) {
+    protected GppLinker(final GppLinker ld, final boolean isXCoderun) {
         super(ld, isXCoderun);
     }
 
@@ -169,11 +169,11 @@ public class GppLinker extends GnuLinker {
     }
 
     @Override
-    protected void addImpliedArgs(boolean debug, LinkType linkType, Vector args) {
+    protected void addImpliedArgs(final boolean debug, final LinkType linkType, final Vector args) {
         super.addImpliedArgs(debug, linkType, args);
         if (linkType.isStaticRuntime()) {
-            String[] cmdin = new String[]{"g++", "-print-file-name=libstdc++.a"};
-            String[] cmdout = CaptureStreamHandler.run(cmdin);
+            final String[] cmdin = new String[]{"g++", "-print-file-name=libstdc++.a"};
+            final String[] cmdout = CaptureStreamHandler.run(cmdin);
             if (cmdout.length > 0) {
                 runtimeLibrary = cmdout[0];
             } else {
@@ -184,9 +184,9 @@ public class GppLinker extends GnuLinker {
         }
     }
     @Override
-    public String[] addLibrarySets(CCTask task, LibrarySet[] libsets,
-            Vector preargs, Vector midargs, Vector endargs) {
-        String[] rs = super.addLibrarySets(task, libsets, preargs, midargs,
+    public String[] addLibrarySets(final CCTask task, final LibrarySet[] libsets,
+            final Vector preargs, final Vector midargs, final Vector endargs) {
+        final String[] rs = super.addLibrarySets(task, libsets, preargs, midargs,
                 endargs);
         if (runtimeLibrary != null) {
             endargs.addElement(runtimeLibrary);
@@ -200,12 +200,12 @@ public class GppLinker extends GnuLinker {
     @Override
     public File[] getLibraryPath() {
         if (libDirs == null) {
-            Vector dirs = new Vector();
+            final Vector dirs = new Vector();
             // Ask GCC where it will look for its libraries.
-            String[] args = new String[]{"g++", "-print-search-dirs"};
-            String[] cmdout = CaptureStreamHandler.run(args);
+            final String[] args = new String[]{"g++", "-print-search-dirs"};
+            final String[] cmdout = CaptureStreamHandler.run(args);
             for (int i = 0; i < cmdout.length; ++i) {
-                int prefixIndex = cmdout[i].indexOf(libPrefix);
+                final int prefixIndex = cmdout[i].indexOf(libPrefix);
                 if (prefixIndex >= 0) {
                     // Special case DOS-type GCCs like MinGW or Cygwin
                     int s = prefixIndex + libPrefix.length();
@@ -223,9 +223,9 @@ public class GppLinker extends GnuLinker {
                 }
             }
             // Eliminate all but actual directories.
-            String[] libpath = new String[dirs.size()];
+            final String[] libpath = new String[dirs.size()];
             dirs.copyInto(libpath);
-            int count = CUtil.checkDirectoryArray(libpath);
+            final int count = CUtil.checkDirectoryArray(libpath);
             // Build return array.
             libDirs = new File[count];
             int index = 0;

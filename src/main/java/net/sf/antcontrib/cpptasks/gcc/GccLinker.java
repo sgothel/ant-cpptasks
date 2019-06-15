@@ -80,13 +80,13 @@ public class GccLinker extends GnuLinker {
         return xcodeClangInstance;
     }
 
-    protected GccLinker(String command, String[] extensions,
-            String[] ignoredExtensions, String outputPrefix,
-            String outputSuffix, boolean isLibtool, GccLinker libtoolLinker) {
+    protected GccLinker(final String command, final String[] extensions,
+            final String[] ignoredExtensions, final String outputPrefix,
+            final String outputSuffix, final boolean isLibtool, final GccLinker libtoolLinker) {
         super(command, "-dumpversion", extensions, ignoredExtensions,
                 outputPrefix, outputSuffix, false, isLibtool, libtoolLinker);
     }
-    protected GccLinker(GccLinker ld, boolean isXCoderun) {
+    protected GccLinker(final GccLinker ld, final boolean isXCoderun) {
         super(ld, isXCoderun);
     }
 
@@ -169,7 +169,7 @@ public class GccLinker extends GnuLinker {
             //
             //   construct gcc lib path from machine and version
             //
-            StringBuffer buf = new StringBuffer("/lib/gcc-lib/");
+            final StringBuffer buf = new StringBuffer("/lib/gcc-lib/");
             buf.append(GccProcessor.getMachine());
             buf.append('/');
             buf.append(GccProcessor.getVersion());
@@ -181,8 +181,8 @@ public class GccLinker extends GnuLinker {
             //
             //     read gcc specs file for other library paths
             //
-            String[] specs = GccProcessor.getSpecs();
-            String[][] libpaths = GccProcessor.parseSpecs(specs, "*link:",
+            final String[] specs = GccProcessor.getSpecs();
+            final String[][] libpaths = GccProcessor.parseSpecs(specs, "*link:",
                     new String[]{"%q"});
             String[] libpath;
             if (libpaths[0].length > 0) {
@@ -219,7 +219,7 @@ public class GccLinker extends GnuLinker {
             //
             //  check that remaining entries are actual directories
             //
-            int count = CUtil.checkDirectoryArray(libpath);
+            final int count = CUtil.checkDirectoryArray(libpath);
             //
             //   populate return array with remaining entries
             //

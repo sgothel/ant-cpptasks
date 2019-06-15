@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Copyright 2003-2004 The Ant-Contrib project
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +31,7 @@ import net.sf.antcontrib.cpptasks.types.LibrarySet;
 import org.apache.tools.ant.BuildException;
 /**
  * Adapter for the g++ variant of the GCC linker
- * 
+ *
  * @author Stephen M. Webb <stephen.webb@bregmasoft.com>
  */
 public class GppLinker extends AbstractLdLinker {
@@ -63,13 +63,13 @@ public class GppLinker extends AbstractLdLinker {
     }
     private File[] libDirs;
     private String runtimeLibrary;
-    protected GppLinker(String command, String[] extensions,
-            String[] ignoredExtensions, String outputPrefix,
-            String outputSuffix, boolean isLibtool, GppLinker libtoolLinker) {
+    protected GppLinker(final String command, final String[] extensions,
+            final String[] ignoredExtensions, final String outputPrefix,
+            final String outputSuffix, final boolean isLibtool, final GppLinker libtoolLinker) {
         super(command, "-dumpversion", extensions, ignoredExtensions,
                 outputPrefix, outputSuffix, false, isLibtool, libtoolLinker);
     }
-    protected void addImpliedArgs(boolean debug, LinkType linkType, Vector args) {
+    protected void addImpliedArgs(final boolean debug, final LinkType linkType, final Vector args) {
         super.addImpliedArgs(debug, linkType, args);
         if (getIdentifier().indexOf("mingw") >= 0) {
             if (linkType.isSubsystemConsole()) {
@@ -80,8 +80,8 @@ public class GppLinker extends AbstractLdLinker {
             }
         }
         if (linkType.isStaticRuntime()) {
-            String[] cmdin = new String[]{"g++", "-print-file-name=libstdc++.a"};
-            String[] cmdout = CaptureStreamHandler.run(cmdin);
+            final String[] cmdin = new String[]{"g++", "-print-file-name=libstdc++.a"};
+            final String[] cmdout = CaptureStreamHandler.run(cmdin);
             if (cmdout.length > 0) {
                 runtimeLibrary = cmdout[0];
             } else {
@@ -91,9 +91,9 @@ public class GppLinker extends AbstractLdLinker {
             runtimeLibrary = "-lstdc++";
         }
     }
-    public String[] addLibrarySets(CCTask task, LibrarySet[] libsets,
-            Vector preargs, Vector midargs, Vector endargs) {
-        String[] rs = super.addLibrarySets(task, libsets, preargs, midargs,
+    public String[] addLibrarySets(final CCTask task, final LibrarySet[] libsets,
+            final Vector preargs, final Vector midargs, final Vector endargs) {
+        final String[] rs = super.addLibrarySets(task, libsets, preargs, midargs,
                 endargs);
         if (runtimeLibrary != null) {
             endargs.addElement(runtimeLibrary);
@@ -101,20 +101,20 @@ public class GppLinker extends AbstractLdLinker {
         return rs;
     }
     protected Object clone() throws CloneNotSupportedException {
-        GppLinker clone = (GppLinker) super.clone();
+        final GppLinker clone = (GppLinker) super.clone();
         return clone;
     }
     /**
      * Allows drived linker to decorate linker option. Override by GppLinker to
      * prepend a "-Wl," to pass option to through gcc to linker.
-     * 
+     *
      * @param buf
      *            buffer that may be used and abused in the decoration process,
      *            must not be null.
      * @param arg
      *            linker argument
      */
-    public String decorateLinkerOption(StringBuffer buf, String arg) {
+    public String decorateLinkerOption(final StringBuffer buf, final String arg) {
         String decoratedArg = arg;
         if (arg.length() > 1 && arg.charAt(0) == '-') {
             switch (arg.charAt(1)) {
@@ -153,16 +153,16 @@ public class GppLinker extends AbstractLdLinker {
     }
     /**
      * Returns library path.
-     *  
+     *
      */
     public File[] getLibraryPath() {
         if (libDirs == null) {
-            Vector dirs = new Vector();
+            final Vector dirs = new Vector();
             // Ask GCC where it will look for its libraries.
-            String[] args = new String[]{"g++", "-print-search-dirs"};
-            String[] cmdout = CaptureStreamHandler.run(args);
+            final String[] args = new String[]{"g++", "-print-search-dirs"};
+            final String[] cmdout = CaptureStreamHandler.run(args);
             for (int i = 0; i < cmdout.length; ++i) {
-                int prefixIndex = cmdout[i].indexOf(libPrefix);
+                final int prefixIndex = cmdout[i].indexOf(libPrefix);
                 if (prefixIndex >= 0) {
                     // Special case DOS-type GCCs like MinGW or Cygwin
                     int s = prefixIndex + libPrefix.length();
@@ -180,9 +180,9 @@ public class GppLinker extends AbstractLdLinker {
                 }
             }
             // Eliminate all but actual directories.
-            String[] libpath = new String[dirs.size()];
+            final String[] libpath = new String[dirs.size()];
             dirs.copyInto(libpath);
-            int count = CUtil.checkDirectoryArray(libpath);
+            final int count = CUtil.checkDirectoryArray(libpath);
             // Build return array.
             libDirs = new File[count];
             int index = 0;
@@ -221,20 +221,20 @@ public class GppLinker extends AbstractLdLinker {
         }
         return instance;
     }
-    public void link(CCTask task, File outputFile, String[] sourceFiles,
-            CommandLineLinkerConfiguration config) throws BuildException {
+    public void link(final CCTask task, final File outputFile, final String[] sourceFiles,
+            final CommandLineLinkerConfiguration config) throws BuildException {
         try {
-            GppLinker clone = (GppLinker) this.clone();
-            LinkerParam param = config.getParam("target");
+            final GppLinker clone = (GppLinker) this.clone();
+            final LinkerParam param = config.getParam("target");
             if (param != null)
                 clone.setCommand(param.getValue() + "-" + this.getCommand());
             clone.superlink(task, outputFile, sourceFiles, config);
-        } catch (CloneNotSupportedException e) {
+        } catch (final CloneNotSupportedException e) {
             superlink(task, outputFile, sourceFiles, config);
         }
     }
-    private void superlink(CCTask task, File outputFile, String[] sourceFiles,
-            CommandLineLinkerConfiguration config) throws BuildException {
+    private void superlink(final CCTask task, final File outputFile, final String[] sourceFiles,
+            final CommandLineLinkerConfiguration config) throws BuildException {
         super.link(task, outputFile, sourceFiles, config);
     }
 }

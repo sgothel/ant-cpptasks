@@ -34,27 +34,27 @@ import net.sf.antcontrib.cpptasks.types.LibraryTypeEnum;
  */
 public abstract class AbstractLdLinker extends CommandLineLinker {
     private final String outputPrefix;
-    protected AbstractLdLinker(String command, String identifierArg,
-            String[] extensions, String[] ignoredExtensions,
-            String outputPrefix, String outputSuffix, boolean isXCoderun,
-            boolean isLibtool, AbstractLdLinker libtoolLinker) {
+    protected AbstractLdLinker(final String command, final String identifierArg,
+            final String[] extensions, final String[] ignoredExtensions,
+            final String outputPrefix, final String outputSuffix, final boolean isXCoderun,
+            final boolean isLibtool, final AbstractLdLinker libtoolLinker) {
         super(command, identifierArg, extensions, ignoredExtensions,
                 outputSuffix, isXCoderun, isLibtool, libtoolLinker);
         this.outputPrefix = outputPrefix;
     }
-    protected AbstractLdLinker(AbstractLdLinker ld, boolean isXCoderun) {
+    protected AbstractLdLinker(final AbstractLdLinker ld, final boolean isXCoderun) {
         super(ld, isXCoderun);
         this.outputPrefix = ld.outputPrefix;
     }
-    public void addBase(long base, Vector args) {
+    public void addBase(final long base, final Vector args) {
             if (base >= 0) {
                     args.addElement("--image-base");
                     args.addElement(Long.toHexString(base));
             }
     }
-    public void addFixed(Boolean fixed, Vector args) {
+    public void addFixed(final Boolean fixed, final Vector args) {
     }
-    protected void addImpliedArgs(boolean debug, LinkType linkType, Vector args) {
+    protected void addImpliedArgs(final boolean debug, final LinkType linkType, final Vector args) {
         if (debug) {
             args.addElement("-g");
         }
@@ -77,13 +77,13 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
             }
         }
     }
-    public void addIncremental(boolean incremental, Vector args) {
+    public void addIncremental(final boolean incremental, final Vector args) {
             if (incremental) {
                     args.addElement("-i");
             }
     }
-    protected int addLibraryPatterns(String[] libnames, StringBuffer buf,
-            String prefix, String extension, String[] patterns, int offset) {
+    protected int addLibraryPatterns(final String[] libnames, final StringBuffer buf,
+            final String prefix, final String extension, final String[] patterns, final int offset) {
         for (int i = 0; i < libnames.length; i++) {
             buf.setLength(0);
             buf.append(prefix);
@@ -93,18 +93,18 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
         }
         return offset + libnames.length;
     }
-    public String[] addLibrarySets(CCTask task, LibrarySet[] libsets,
-            Vector preargs, Vector midargs, Vector endargs) {
-        Vector libnames = new Vector();
+    public String[] addLibrarySets(final CCTask task, final LibrarySet[] libsets,
+            final Vector preargs, final Vector midargs, final Vector endargs) {
+        final Vector libnames = new Vector();
         super.addLibrarySets(task, libsets, preargs, midargs, endargs);
         LibraryTypeEnum previousLibraryType = null;
         for (int i = 0; i < libsets.length; i++) {
-            LibrarySet set = libsets[i];
-            File libdir = set.getDir(null);
-            String[] libs = set.getLibs();
+            final LibrarySet set = libsets[i];
+            final File libdir = set.getDir(null);
+            final String[] libs = set.getLibs();
             if (libdir != null) {
                     String relPath = libdir.getAbsolutePath();
-                    File outputFile = task.getOutfile();
+                    final File outputFile = task.getOutfile();
                     if (outputFile != null && outputFile.getParentFile() != null) {
                         relPath = CUtil.getRelativePath(
                             outputFile.getParentFile().getAbsolutePath(), libdir);
@@ -133,14 +133,14 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
                             }
                     }
             }
-            StringBuffer buf = new StringBuffer("-l");
+            final StringBuffer buf = new StringBuffer("-l");
             if (set.getType() != null &&
                             "framework".equals(set.getType().getValue()) &&
                                         isDarwin()) {
                     buf.setLength(0);
                     buf.append("-framework ");
             }
-            int initialLength = buf.length();
+            final int initialLength = buf.length();
             for (int j = 0; j < libs.length; j++) {
                 //
                 //  reset the buffer to just "-l"
@@ -155,18 +155,18 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
                 endargs.addElement(buf.toString());
             }
         }
-        String rc[] = new String[libnames.size()];
+        final String rc[] = new String[libnames.size()];
         for (int i = 0; i < libnames.size(); i++) {
             rc[i] = (String) libnames.elementAt(i);
         }
         return rc;
     }
-    public void addMap(boolean map, Vector args) {
+    public void addMap(final boolean map, final Vector args) {
             if (map) {
                     args.addElement("-M");
             }
     }
-    public void addStack(int stack, Vector args) {
+    public void addStack(final int stack, final Vector args) {
             if (stack > 0) {
                     args.addElement("--stack");
                     args.addElement(Integer.toString(stack));
@@ -175,14 +175,14 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
     /* (non-Javadoc)
      * @see net.sf.antcontrib.cpptasks.compiler.CommandLineLinker#addEntry(int, java.util.Vector)
      */
-    protected void addEntry(String entry, Vector args) {
+    protected void addEntry(final String entry, final Vector args) {
             if (entry != null) {
                     args.addElement("-e");
                     args.addElement(entry);
             }
     }
 
-    public String getCommandFileSwitch(String commandFile) {
+    public String getCommandFileSwitch(final String commandFile) {
         throw new IllegalStateException("ld does not support command files");
     }
     /**
@@ -192,9 +192,9 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
     protected File[] getEnvironmentIncludePath() {
         return CUtil.getPathFromEnvironment("LIB", ":");
     }
-    public String getLibraryKey(File libfile) {
-        String libname = libfile.getName();
-        int lastDot = libname.lastIndexOf('.');
+    public String getLibraryKey(final File libfile) {
+        final String libname = libfile.getName();
+        final int lastDot = libname.lastIndexOf('.');
         if (lastDot >= 0) {
             return libname.substring(0, lastDot);
         }
@@ -207,13 +207,13 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
     public File[] getLibraryPath() {
         return new File[0];
     }
-    public String[] getLibraryPatterns(String[] libnames, LibraryTypeEnum libType) {
-        StringBuffer buf = new StringBuffer();
+    public String[] getLibraryPatterns(final String[] libnames, final LibraryTypeEnum libType) {
+        final StringBuffer buf = new StringBuffer();
         int patternCount = libnames.length;
         if (libType == null) {
                 patternCount *= 2;
         }
-        String[] patterns = new String[patternCount];
+        final String[] patterns = new String[patternCount];
         int offset = 0;
         if (libType == null || "static".equals(libType.getValue())) {
                 offset = addLibraryPatterns(libnames, buf, "lib", ".a", patterns, 0);
@@ -242,8 +242,8 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
     public int getMaximumCommandLength() {
         return Integer.MAX_VALUE;
     }
-    public String[] getOutputFileNames(String baseName, VersionInfo versionInfo) {
-            String[] baseNames = super.getOutputFileNames(baseName, versionInfo);
+    public String[] getOutputFileNames(final String baseName, final VersionInfo versionInfo) {
+            final String[] baseNames = super.getOutputFileNames(baseName, versionInfo);
             if (outputPrefix.length() > 0) {
                     for(int i = 0; i < baseNames.length; i++) {
                             baseNames[i] = outputPrefix + baseNames[i];
@@ -251,7 +251,7 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
             }
         return baseNames;
     }
-    public String[] getOutputFileSwitch(String outputFile) {
+    public String[] getOutputFileSwitch(final String outputFile) {
         return GccProcessor.getOutputFileSwitch("-o", outputFile);
     }
 
@@ -259,7 +259,7 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
         return true;
     }
     protected boolean isHPUX() {
-        String osname = System.getProperty("os.name").toLowerCase();
+        final String osname = System.getProperty("os.name").toLowerCase();
         if (osname.indexOf("hp") >= 0 && osname.indexOf("ux") >= 0) {
             return true;
         }
@@ -277,14 +277,14 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
      *            linker configuration
      * @return arguments for runTask
      */
-    public String[] prepareArguments(CCTask task, String outputDir,
-            String outputFile, String[] sourceFiles,
-            CommandLineLinkerConfiguration config) {
+    public String[] prepareArguments(final CCTask task, final String outputDir,
+            final String outputFile, final String[] sourceFiles,
+            final CommandLineLinkerConfiguration config) {
         //
         //   need to suppress sources that correspond to
         //        library set entries since they are already
         //        in the argument list
-        String[] libnames = config.getLibraryNames();
+        final String[] libnames = config.getLibraryNames();
         if (libnames == null || libnames.length == 0) {
             return super.prepareArguments(task, outputDir, outputFile,
                     sourceFiles, config);
@@ -293,18 +293,18 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
         //
         //   null out any sources that correspond to library names
         //
-        String[] localSources = sourceFiles.clone();
+        final String[] localSources = sourceFiles.clone();
         int extra = 0;
         for (int i = 0; i < libnames.length; i++) {
-            String libname = libnames[i];
+            final String libname = libnames[i];
             for (int j = 0; j < localSources.length; j++) {
                 if (localSources[j] != null
                         && localSources[j].indexOf(libname) > 0
                         && localSources[j].indexOf("lib") > 0) {
-                    String filename = new File(localSources[j]).getName();
+                    final String filename = new File(localSources[j]).getName();
                     if (filename.startsWith("lib")
                             && filename.substring(3).startsWith(libname)) {
-                        String extension = filename
+                        final String extension = filename
                                 .substring(libname.length() + 3);
                         if (extension.equals(".a") || extension.equals(".so")
                                 || extension.equals(".sl")) {
@@ -319,7 +319,7 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
             return super.prepareArguments(task, outputDir, outputFile,
                     sourceFiles, config);
         }
-        String[] finalSources = new String[localSources.length - extra];
+        final String[] finalSources = new String[localSources.length - extra];
         int index = 0;
         for (int i = 0; i < localSources.length; i++) {
             if (localSources[i] != null) {

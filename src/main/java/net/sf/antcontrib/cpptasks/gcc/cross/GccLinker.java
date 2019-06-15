@@ -58,13 +58,13 @@ public class GccLinker extends AbstractLdLinker {
         return instance;
     }
     private File[] libDirs;
-    protected GccLinker(String command, String[] extensions,
-            String[] ignoredExtensions, String outputPrefix,
-            String outputSuffix, boolean isLibtool, GccLinker libtoolLinker) {
+    protected GccLinker(final String command, final String[] extensions,
+            final String[] ignoredExtensions, final String outputPrefix,
+            final String outputSuffix, final boolean isLibtool, final GccLinker libtoolLinker) {
         super(command, "-dumpversion", extensions, ignoredExtensions,
                 outputPrefix, outputSuffix, false, isLibtool, libtoolLinker);
     }
-    protected void addImpliedArgs(boolean debug, LinkType linkType, Vector args) {
+    protected void addImpliedArgs(final boolean debug, final LinkType linkType, final Vector args) {
         super.addImpliedArgs(debug, linkType, args);
         if (getIdentifier().indexOf("mingw") >= 0) {
             if (linkType.isSubsystemConsole()) {
@@ -76,7 +76,7 @@ public class GccLinker extends AbstractLdLinker {
         }
     }
     protected Object clone() throws CloneNotSupportedException {
-        GccLinker clone = (GccLinker) super.clone();
+        final GccLinker clone = (GccLinker) super.clone();
         return clone;
     }
     /**
@@ -89,7 +89,7 @@ public class GccLinker extends AbstractLdLinker {
      * @param arg
      *            linker argument
      */
-    public String decorateLinkerOption(StringBuffer buf, String arg) {
+    public String decorateLinkerOption(final StringBuffer buf, final String arg) {
         String decoratedArg = arg;
         if (arg.length() > 1 && arg.charAt(0) == '-') {
             switch (arg.charAt(1)) {
@@ -136,20 +136,20 @@ public class GccLinker extends AbstractLdLinker {
             //
             //   construct gcc lib path from machine and version
             //
-            StringBuffer buf = new StringBuffer("/lib/gcc-lib/");
+            final StringBuffer buf = new StringBuffer("/lib/gcc-lib/");
             buf.append(GccProcessor.getMachine());
             buf.append('/');
             buf.append(GccProcessor.getVersion());
             //
             //   build default path from gcc and system /lib and /lib/w32api
             //
-            String[] impliedLibPath = new String[]{buf.toString(),
+            final String[] impliedLibPath = new String[]{buf.toString(),
                     "/lib/w32api", "/lib"};
             //
             //     read gcc specs file for other library paths
             //
-            String[] specs = GccProcessor.getSpecs();
-            String[][] libpaths = GccProcessor.parseSpecs(specs, "*link:",
+            final String[] specs = GccProcessor.getSpecs();
+            final String[][] libpaths = GccProcessor.parseSpecs(specs, "*link:",
                     new String[]{"%q"});
             String[] libpath;
             if (libpaths[0].length > 0) {
@@ -186,7 +186,7 @@ public class GccLinker extends AbstractLdLinker {
             //
             //  check that remaining entries are actual directories
             //
-            int count = CUtil.checkDirectoryArray(libpath);
+            final int count = CUtil.checkDirectoryArray(libpath);
             //
             //   populate return array with remaining entries
             //
@@ -227,20 +227,20 @@ public class GccLinker extends AbstractLdLinker {
         }
         return instance;
     }
-    public void link(CCTask task, File outputFile, String[] sourceFiles,
-            CommandLineLinkerConfiguration config) throws BuildException {
+    public void link(final CCTask task, final File outputFile, final String[] sourceFiles,
+            final CommandLineLinkerConfiguration config) throws BuildException {
         try {
-            GccLinker clone = (GccLinker) this.clone();
-            LinkerParam param = config.getParam("target");
+            final GccLinker clone = (GccLinker) this.clone();
+            final LinkerParam param = config.getParam("target");
             if (param != null)
                 clone.setCommand(param.getValue() + "-" + this.getCommand());
             clone.superlink(task, outputFile, sourceFiles, config);
-        } catch (CloneNotSupportedException e) {
+        } catch (final CloneNotSupportedException e) {
             superlink(task, outputFile, sourceFiles, config);
         }
     }
-    private void superlink(CCTask task, File outputFile, String[] sourceFiles,
-            CommandLineLinkerConfiguration config) throws BuildException {
+    private void superlink(final CCTask task, final File outputFile, final String[] sourceFiles,
+            final CommandLineLinkerConfiguration config) throws BuildException {
         super.link(task, outputFile, sourceFiles, config);
     }
 }

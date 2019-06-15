@@ -16,17 +16,17 @@ public abstract class GnuLinker extends AbstractLdLinker {
     protected final boolean isGCC;
     protected File[] libDirs;
 
-    public GnuLinker(String command, String identifierArg, String[] extensions,
-            String[] ignoredExtensions, String outputPrefix,
-            String outputSuffix, boolean isXCoderun, boolean isLibtool,
-            AbstractLdLinker libtoolLinker) {
+    public GnuLinker(final String command, final String identifierArg, final String[] extensions,
+            final String[] ignoredExtensions, final String outputPrefix,
+            final String outputSuffix, final boolean isXCoderun, final boolean isLibtool,
+            final AbstractLdLinker libtoolLinker) {
         super(command, identifierArg, extensions, ignoredExtensions,
                 outputPrefix, outputSuffix, isXCoderun, isLibtool,
                 libtoolLinker);
         isGCC = "gcc".equals(command);
     }
 
-    public GnuLinker(AbstractLdLinker ld, boolean isXCoderun) {
+    public GnuLinker(final AbstractLdLinker ld, final boolean isXCoderun) {
         super(ld, isXCoderun);
         isGCC = "gcc".equals(getCommand());
     }
@@ -50,7 +50,7 @@ public abstract class GnuLinker extends AbstractLdLinker {
     protected abstract GnuLinker getStaticInstance();
 
     @Override
-    protected void addImpliedArgs(boolean debug, LinkType linkType, Vector args) {
+    protected void addImpliedArgs(final boolean debug, final LinkType linkType, final Vector args) {
         super.addImpliedArgs(debug, linkType, args);
         if (getIdentifier().indexOf("mingw") >= 0) {
             if (linkType.isSubsystemConsole()) {
@@ -73,7 +73,7 @@ public abstract class GnuLinker extends AbstractLdLinker {
      *            linker argument
      */
     @Override
-    public String decorateLinkerOption(StringBuffer buf, String arg) {
+    public String decorateLinkerOption(final StringBuffer buf, final String arg) {
         if (arg.startsWith("--sysroot")) {
           return arg;
         }
@@ -100,7 +100,7 @@ public abstract class GnuLinker extends AbstractLdLinker {
                     break;
                 default :
                     boolean known = false;
-                    HashSet<String> allLinkerOptions = new HashSet<String>();
+                    final HashSet<String> allLinkerOptions = new HashSet<String>();
                     allLinkerOptions.addAll(Arrays.asList(getStaticLinkerOptions()));
                     if (isDarwin()) {
                         allLinkerOptions.addAll(Arrays.asList(darwinLinkerOptions));
