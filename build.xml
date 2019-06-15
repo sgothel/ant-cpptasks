@@ -135,8 +135,8 @@
            target="${javac.target}"
            source="${javac.source}"
            deprecation="${deprecation}"
-           optimize="${optimize}" >
-    </javac>
+           optimize="${optimize}"
+           classpath="${lib.dir}/xercesImpl-2.12.0.jar"/>
   </target>
 
   <!--
@@ -177,7 +177,7 @@
            target="${javac.target}"
            source="${javac.source}"
            optimize="false"
-           classpath="${build.lib}/${name}.jar;${java.class.path}"/>
+           classpath="${lib.dir}/xercesImpl-2.12.0.jar;${build.lib}/${name}.jar;${java.class.path}"/>
     <jar jarfile="${tests.build.lib}/${name}_test.jar">
             <fileset dir="." includes="NOTICE LICENSE"/>
             <fileset dir="${tests.build.classes}"/>
