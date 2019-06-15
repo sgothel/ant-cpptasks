@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Copyright 2001-2004 The Ant-Contrib project
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,9 +19,10 @@ import java.io.File;
 
 import net.sf.antcontrib.cpptasks.compiler.LinkType;
 import net.sf.antcontrib.cpptasks.compiler.Linker;
+import net.sf.antcontrib.cpptasks.gcc.cross.GccLibrarian;
 /**
  * Adapter for the 'ld' linker
- * 
+ *
  * @author Curt Arnold
  */
 public final class LdLinker extends AbstractLdLinker {
@@ -31,6 +32,9 @@ public final class LdLinker extends AbstractLdLinker {
     private static final LdLinker dllLinker = new LdLinker("ld", objFiles,
             discardFiles, "lib", ".so", false, new LdLinker("ld", objFiles,
                     discardFiles, "lib", ".so", true, null));
+    private static final LdLinker arLinker = new LdLinker("ld", objFiles,
+            discardFiles, "lib", ".a", false, new LdLinker("ld", objFiles,
+                    discardFiles, "lib", ".a", true, null));
     private static final LdLinker instance = new LdLinker("ld", objFiles,
             discardFiles, "", "", false, null);
     private static final String[] libtoolObjFiles = new String[]{".fo", ".a",
@@ -39,15 +43,18 @@ public final class LdLinker extends AbstractLdLinker {
         return instance;
     }
     private File[] libDirs;
-    private LdLinker(String command, String[] extensions,
-            String[] ignoredExtensions, String outputPrefix,
-            String outputSuffix, boolean isLibtool, LdLinker libtoolLinker) {
+    private LdLinker(final String command, final String[] extensions,
+            final String[] ignoredExtensions, final String outputPrefix,
+            final String outputSuffix, final boolean isLibtool, final LdLinker libtoolLinker) {
         super(command, "-version", extensions, ignoredExtensions, outputPrefix,
                 outputSuffix, false, isLibtool, libtoolLinker);
     }
-    public Linker getLinker(LinkType type) {
-        if (type.isStaticLibrary()) {
+    public Linker getLinker(final LinkType type) {
+        if ( type.isStaticLibrary() && !type.getUseHighlevelTool() ) {
             return GccLibrarian.getInstance();
+        }
+        if (type.isStaticLibrary()) {
+            return arLinker;
         }
         if (type.isSharedLibrary()) {
             return dllLinker;

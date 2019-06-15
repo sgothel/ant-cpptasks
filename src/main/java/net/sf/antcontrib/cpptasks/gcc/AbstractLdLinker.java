@@ -59,8 +59,11 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
             args.addElement("-g");
         }
         if (isDarwin()) {
-            if (linkType.isStaticRuntime() || linkType.isStaticLibrary()) {
+            if (linkType.isStaticRuntime() ) {
                 args.addElement("-static");
+            }
+            if (linkType.isStaticLibrary()) {
+                args.addElement("-r"); // reloctable or incremental linker
             } else if (linkType.isPluginModule()) {
                 args.addElement("-bundle");
             } else  if (linkType.isSharedLibrary()) {
@@ -68,8 +71,11 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
                 args.addElement("-dynamic");
             }
         } else {
-            if (linkType.isStaticRuntime() || linkType.isStaticLibrary()) {
+            if (linkType.isStaticRuntime() ) {
                 args.addElement("-static");
+            }
+            if (linkType.isStaticLibrary()) {
+                args.addElement("-r"); // reloctable or incremental linker
             } else if (linkType.isPluginModule()) {
                 args.addElement("-shared");
             } else if (linkType.isSharedLibrary()) {
