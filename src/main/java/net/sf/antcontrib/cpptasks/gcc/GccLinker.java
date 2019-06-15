@@ -36,16 +36,21 @@ public class GccLinker extends GnuLinker {
             "-static", "-shared", "-symbolic", "-Xlinker",
             "--export-all-symbols", "-static-libgcc", "-static-libstdc++",};
 
-    private static final GccLinker dllLinker = new GccLinker("gcc", objFiles,
-            discardFiles, "lib", ".so", false, new GccLinker("gcc", objFiles, discardFiles, "lib", ".so", true, null));
-    private static final GccLinker dllClangLinker = new GccLinker("clang", objFiles,
-            discardFiles, "lib", ".so", false, new GccLinker("clang", objFiles, discardFiles, "lib", ".so", true, null));
-
     private static final GccLinker instance = new GccLinker("gcc", objFiles,
             discardFiles, "", "", false, null);
     private static final GccLinker clangInstance = new GccLinker("clang", objFiles,
             discardFiles, "", "", false, null);
     private static final GccLinker xcodeClangInstance = new GccLinker(clangInstance, true);
+
+    private static final GccLinker dllLinker = new GccLinker("gcc", objFiles,
+            discardFiles, "lib", ".so", false, new GccLinker("gcc", objFiles, discardFiles, "lib", ".so", true, null));
+    private static final GccLinker dllClangLinker = new GccLinker("clang", objFiles,
+            discardFiles, "lib", ".so", false, new GccLinker("clang", objFiles, discardFiles, "lib", ".so", true, null));
+
+    private static final GccLinker arLinker = new GccLinker("gcc", objFiles,
+            discardFiles, "lib", ".a", false, new GccLinker("gcc", objFiles, discardFiles, "lib", ".a", true, null));
+    private static final GccLinker arClangLinker = new GccLinker("clang", objFiles,
+            discardFiles, "lib", ".a", false, new GccLinker("clang", objFiles, discardFiles, "lib", ".a", true, null));
 
     private static final GccLinker machBundleLinker = new GccLinker("gcc",
             objFiles, discardFiles, "lib", ".bundle", false, null);
@@ -58,6 +63,12 @@ public class GccLinker extends GnuLinker {
     private static final GccLinker machDllClangLinker = new GccLinker("clang",
             objFiles, discardFiles, "lib", ".dylib", false, null);
     private static final GccLinker xcodeMachDllClangLinker = new GccLinker(machDllClangLinker, true);
+
+    private static final GccLinker machArLinker = new GccLinker("gcc",
+            objFiles, discardFiles, "lib", ".a", false, null);
+    private static final GccLinker machArClangLinker = new GccLinker("clang",
+            objFiles, discardFiles, "lib", ".a", false, null);
+    private static final GccLinker xcodeMachArClangLinker = new GccLinker(machArClangLinker, true);
 
     public static GccLinker getInstance() {
         return instance;
@@ -91,6 +102,14 @@ public class GccLinker extends GnuLinker {
         return dllClangLinker;
     }
     @Override
+    protected final GnuLinker getStaticArLinker() {
+        return arLinker;
+    }
+    @Override
+    protected final GnuLinker getStaticArClangLinker() {
+        return arClangLinker;
+    }
+    @Override
     protected final GnuLinker getStaticClangInstance() {
         return clangInstance;
     }
@@ -122,6 +141,19 @@ public class GccLinker extends GnuLinker {
     protected final GnuLinker getStaticXcodeMachDllClangLinker() {
         return xcodeMachDllClangLinker;
     }
+    @Override
+    protected final GnuLinker getStaticMachArLinker() {
+        return machArLinker;
+    }
+    @Override
+    protected final GnuLinker getStaticMachArClangLinker() {
+        return machArClangLinker;
+    }
+    @Override
+    protected final GnuLinker getStaticXcodeMachArClangLinker() {
+        return xcodeMachArClangLinker;
+    }
+
     @Override
     protected final GnuLinker getStaticInstance() {
         return instance;

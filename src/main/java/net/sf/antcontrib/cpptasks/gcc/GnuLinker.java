@@ -34,6 +34,8 @@ public abstract class GnuLinker extends AbstractLdLinker {
     protected abstract String[] getStaticLinkerOptions();
     protected abstract GnuLinker getStaticDllLinker();
     protected abstract GnuLinker getStaticDllClangLinker();
+    protected abstract GnuLinker getStaticArLinker();
+    protected abstract GnuLinker getStaticArClangLinker();
     protected abstract GnuLinker getStaticClangInstance();
     protected abstract GnuLinker getStaticXcodeClangInstance();
     protected abstract GnuLinker getStaticMachBundleLinker();
@@ -42,6 +44,9 @@ public abstract class GnuLinker extends AbstractLdLinker {
     protected abstract GnuLinker getStaticMachDllLinker();
     protected abstract GnuLinker getStaticMachDllClangLinker();
     protected abstract GnuLinker getStaticXcodeMachDllClangLinker();
+    protected abstract GnuLinker getStaticMachArLinker();
+    protected abstract GnuLinker getStaticMachArClangLinker();
+    protected abstract GnuLinker getStaticXcodeMachArClangLinker();
     protected abstract GnuLinker getStaticInstance();
 
     @Override
@@ -115,9 +120,16 @@ public abstract class GnuLinker extends AbstractLdLinker {
     }
 
     @Override
-    public Linker getLinker(LinkType type) {
-        if (type.isStaticLibrary()) {
+    public Linker getLinker(final LinkType type) {
+        if ( type.isStaticLibrary() && !type.getUseHighlevelTool() ) {
             return GccLibrarian.getInstance(); // uses 'ar', which is 'gcc' agnostic
+        }
+        if (type.isStaticLibrary()) {
+            if (isDarwin()) {
+                return isGCC ? getStaticMachArLinker() : ( getXcodeRun() ? getStaticXcodeMachArClangLinker() : getStaticMachArClangLinker() );
+            } else {
+                return isGCC ? getStaticArLinker() : getStaticArClangLinker();
+            }
         }
         if (type.isPluginModule()) {
             if (isDarwin()) {

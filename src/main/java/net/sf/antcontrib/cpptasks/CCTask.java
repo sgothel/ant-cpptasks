@@ -1291,6 +1291,28 @@ public class CCTask extends Task {
     	return linkType.getOutputType();
     }
     
+
+    /**
+     * User preference whether to use a high-level-tool for
+     * linker operations, e.g. gcc instead of ar to build static libraries.
+     * <p>
+     * Default is false.
+     * </p>
+     * @param useHighlevelTool user preference, default is false
+     */
+    public void setUseHighlevelTool(final boolean useHighlevelTool) {
+        linkType.setUseHighlevelTool(useHighlevelTool);
+    }
+
+    /**
+     * Gets the usehighleveltool flag.
+     * @return the usehighleveltool flag
+     * @see #setUseHighlevelTool(boolean)
+     */
+    public boolean getUseHighlevelTool() {
+        return linkType.getUseHighlevelTool();
+    }
+
     /**
      * Sets the project.
      */

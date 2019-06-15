@@ -59,24 +59,21 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
             args.addElement("-g");
         }
         if (isDarwin()) {
-            if (linkType.isPluginModule()) {
+            if (linkType.isStaticRuntime() || linkType.isStaticLibrary()) {
+                args.addElement("-static");
+            } else if (linkType.isPluginModule()) {
                 args.addElement("-bundle");
-            } else {
-                if (linkType.isSharedLibrary()) {
-                    // args.addElement("-prebind"); // Only required for OSX 10.3 and earlier, no auto-add (can add manually though)
-                    args.addElement("-dynamiclib");
-                }
+            } else  if (linkType.isSharedLibrary()) {
+                // args.addElement("-prebind"); // Only required for OSX 10.3 and earlier, no auto-add (can add manually though)
+                args.addElement("-dynamic");
             }
         } else {
-            if (linkType.isStaticRuntime()) {
+            if (linkType.isStaticRuntime() || linkType.isStaticLibrary()) {
                 args.addElement("-static");
-            }
-            if (linkType.isPluginModule()) {
+            } else if (linkType.isPluginModule()) {
                 args.addElement("-shared");
-            } else {
-                if (linkType.isSharedLibrary()) {
-                    args.addElement("-shared");
-                }
+            } else if (linkType.isSharedLibrary()) {
+                args.addElement("-shared");
             }
         }
     }

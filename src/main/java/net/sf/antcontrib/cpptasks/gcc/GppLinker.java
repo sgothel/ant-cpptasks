@@ -42,6 +42,12 @@ public class GppLinker extends GnuLinker {
             "-dynamic", "-dynamiclib", "-nostartfiles", "-nostdlib",
             "-prebind", "-s", "-static", "-shared", "-symbolic", "-Xlinker"};
 
+    private static final GppLinker instance = new GppLinker("gcc", objFiles,
+            discardFiles, "", "", false, false, null);
+    private static final GppLinker clangInstance = new GppLinker("clang", objFiles,
+            discardFiles, "", "", false, false, null);
+    private static final GppLinker xcodeClangInstance = new GppLinker(clangInstance, true);
+
     private static final GppLinker dllLinker = new GppLinker("gcc", objFiles,
             discardFiles, "lib", ".so", false, false, new GppLinker("gcc", objFiles,
                     discardFiles, "lib", ".so", false, true, null));
@@ -49,11 +55,12 @@ public class GppLinker extends GnuLinker {
             discardFiles, "lib", ".so", false, false, new GppLinker("clang", objFiles,
                     discardFiles, "lib", ".so", false, true, null));
 
-    private static final GppLinker instance = new GppLinker("gcc", objFiles,
-            discardFiles, "", "", false, false, null);
-    private static final GppLinker clangInstance = new GppLinker("clang", objFiles,
-            discardFiles, "", "", false, false, null);
-    private static final GppLinker xcodeClangInstance = new GppLinker(clangInstance, true);
+    private static final GppLinker arLinker = new GppLinker("gcc", objFiles,
+            discardFiles, "lib", ".a", false, false, new GppLinker("gcc", objFiles,
+                    discardFiles, "lib", ".a", false, true, null));
+    private static final GppLinker arClangLinker = new GppLinker("clang", objFiles,
+            discardFiles, "lib", ".a", false, false, new GppLinker("clang", objFiles,
+                    discardFiles, "lib", ".a", false, true, null));
 
     private static final GppLinker machBundleLinker = new GppLinker("gcc",
             objFiles, discardFiles, "lib", ".bundle", false, false, null);
@@ -66,6 +73,12 @@ public class GppLinker extends GnuLinker {
     private static final GppLinker machDllClangLinker = new GppLinker("clang",
             objFiles, discardFiles, "lib", ".dylib", false, false, null);
     private static final GppLinker xcodeMachDllClangLinker = new GppLinker(machDllClangLinker, true);
+
+    private static final GppLinker machArLinker = new GppLinker("gcc",
+            objFiles, discardFiles, "lib", ".a", false, false, null);
+    private static final GppLinker machArClangLinker = new GppLinker("clang",
+            objFiles, discardFiles, "lib", ".a", false, false, null);
+    private static final GppLinker xcodeMachArClangLinker = new GppLinker(machArClangLinker, true);
 
     public static GppLinker getInstance() {
         return instance;
@@ -99,6 +112,14 @@ public class GppLinker extends GnuLinker {
         return dllClangLinker;
     }
     @Override
+    protected final GnuLinker getStaticArLinker() {
+        return arLinker;
+    }
+    @Override
+    protected final GnuLinker getStaticArClangLinker() {
+        return arClangLinker;
+    }
+    @Override
     protected final GnuLinker getStaticClangInstance() {
         return clangInstance;
     }
@@ -129,6 +150,18 @@ public class GppLinker extends GnuLinker {
     @Override
     protected final GnuLinker getStaticXcodeMachDllClangLinker() {
         return xcodeMachDllClangLinker;
+    }
+    @Override
+    protected final GnuLinker getStaticMachArLinker() {
+        return machArLinker;
+    }
+    @Override
+    protected final GnuLinker getStaticMachArClangLinker() {
+        return machArClangLinker;
+    }
+    @Override
+    protected final GnuLinker getStaticXcodeMachArClangLinker() {
+        return xcodeMachArClangLinker;
     }
     @Override
     protected final GnuLinker getStaticInstance() {

@@ -34,6 +34,9 @@ public class GccLinker extends AbstractLdLinker {
     private static final String[] discardFiles = new String[0];
     private static final String[] objFiles = new String[]{".o", ".a", ".lib",
             ".dll", ".so", ".sl"};
+    private static final GccLinker arLinker = new GccLinker("gcc", objFiles,
+            discardFiles, "lib", ".a", false, new GccLinker("gcc", objFiles,
+                    discardFiles, "lib", ".a", true, null));
     private static final GccLinker dllLinker = new GccLinker("gcc", objFiles,
             discardFiles, "lib", ".so", false, new GccLinker("gcc", objFiles,
                     discardFiles, "lib", ".so", true, null));
@@ -45,6 +48,8 @@ public class GccLinker extends AbstractLdLinker {
             "-dynamiclib", "-nostartfiles", "-nostdlib", "-prebind", "-s",
             "-static", "-shared", "-symbolic", "-Xlinker",
             "--export-all-symbols", "-static-libgcc", "-static-libstdc++",};
+    private static final GccLinker machArLinker = new GccLinker("gcc",
+            objFiles, discardFiles, "lib", ".a", false, null);
     private static final GccLinker machBundleLinker = new GccLinker("gcc",
             objFiles, discardFiles, "lib", ".bundle", false, null);
     private static final GccLinker machDllLinker = new GccLinker("gcc",
@@ -195,9 +200,16 @@ public class GccLinker extends AbstractLdLinker {
         }
         return libDirs;
     }
-    public Linker getLinker(LinkType type) {
-        if (type.isStaticLibrary()) {
+    public Linker getLinker(final LinkType type) {
+        if ( type.isStaticLibrary() && !type.getUseHighlevelTool() ) {
             return GccLibrarian.getInstance();
+        }
+        if (type.isStaticLibrary()) {
+            if (isDarwin()) {
+                return machArLinker;
+            } else {
+                return arLinker;
+            }
         }
         if (type.isPluginModule()) {
             if (isDarwin()) {
