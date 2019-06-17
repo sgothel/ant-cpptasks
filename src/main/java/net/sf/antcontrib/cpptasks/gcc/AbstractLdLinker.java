@@ -68,7 +68,7 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
                 args.addElement("-bundle");
             } else  if (linkType.isSharedLibrary()) {
                 // args.addElement("-prebind"); // Only required for OSX 10.3 and earlier, no auto-add (can add manually though)
-                args.addElement("-dynamic");
+                args.addElement("-dynamiclib");
             }
         } else {
             if (linkType.isStaticRuntime() ) {
