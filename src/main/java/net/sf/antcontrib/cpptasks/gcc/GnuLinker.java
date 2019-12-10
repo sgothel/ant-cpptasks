@@ -12,8 +12,8 @@ import net.sf.antcontrib.cpptasks.compiler.Linker;
 public abstract class GnuLinker extends AbstractLdLinker {
 
     static String[] darwinLinkerOptions = new String[]{"-arch", "-weak_framework", "-lazy_framework", "-weak_library" };
+    static String[] clangLinkerOptions = new String[]{"-target" };
 
-    protected final boolean isGCC;
     protected File[] libDirs;
 
     public GnuLinker(final String command, final String identifierArg, final String[] extensions,
@@ -23,12 +23,10 @@ public abstract class GnuLinker extends AbstractLdLinker {
         super(command, identifierArg, extensions, ignoredExtensions,
                 outputPrefix, outputSuffix, isXCoderun, isLibtool,
                 libtoolLinker);
-        isGCC = "gcc".equals(command);
     }
 
     public GnuLinker(final AbstractLdLinker ld, final boolean isXCoderun) {
         super(ld, isXCoderun);
-        isGCC = "gcc".equals(getCommand());
     }
 
     protected abstract String[] getStaticLinkerOptions();
@@ -102,6 +100,9 @@ public abstract class GnuLinker extends AbstractLdLinker {
                     boolean known = false;
                     final HashSet<String> allLinkerOptions = new HashSet<String>();
                     allLinkerOptions.addAll(Arrays.asList(getStaticLinkerOptions()));
+                    if( isCLANG() ) {
+                        allLinkerOptions.addAll(Arrays.asList(clangLinkerOptions));
+                    }
                     if (isDarwin()) {
                         allLinkerOptions.addAll(Arrays.asList(darwinLinkerOptions));
                     }
@@ -126,26 +127,26 @@ public abstract class GnuLinker extends AbstractLdLinker {
         }
         if (type.isStaticLibrary()) {
             if (isDarwin()) {
-                return isGCC ? getStaticMachArLinker() : ( getXcodeRun() ? getStaticXcodeMachArClangLinker() : getStaticMachArClangLinker() );
+                return isGCC() ? getStaticMachArLinker() : ( isXcodeRun() ? getStaticXcodeMachArClangLinker() : getStaticMachArClangLinker() );
             } else {
-                return isGCC ? getStaticArLinker() : getStaticArClangLinker();
+                return isGCC() ? getStaticArLinker() : getStaticArClangLinker();
             }
         }
         if (type.isPluginModule()) {
             if (isDarwin()) {
-                return isGCC ? getStaticMachBundleLinker() : ( getXcodeRun() ? getStaticXcodeMachClangBundleLinker() : getStaticMachClangBundleLinker() );
+                return isGCC() ? getStaticMachBundleLinker() : ( isXcodeRun() ? getStaticXcodeMachClangBundleLinker() : getStaticMachClangBundleLinker() );
             } else {
-                return isGCC ? getStaticDllLinker() : getStaticDllClangLinker();
+                return isGCC() ? getStaticDllLinker() : getStaticDllClangLinker();
             }
         }
         if (type.isSharedLibrary()) {
             if (isDarwin()) {
-                return isGCC ? getStaticMachDllLinker() : ( getXcodeRun() ? getStaticXcodeMachDllClangLinker() : getStaticMachDllClangLinker() );
+                return isGCC() ? getStaticMachDllLinker() : ( isXcodeRun() ? getStaticXcodeMachDllClangLinker() : getStaticMachDllClangLinker() );
             } else {
-                return isGCC ? getStaticDllLinker() : getStaticDllClangLinker();
+                return isGCC() ? getStaticDllLinker() : getStaticDllClangLinker();
             }
         }
-        return isGCC ? getStaticInstance() : ( getXcodeRun() ? getStaticXcodeClangInstance() : getStaticClangInstance() ) ;
+        return isGCC() ? getStaticInstance() : ( isXcodeRun() ? getStaticXcodeClangInstance() : getStaticClangInstance() ) ;
     }
 
 }

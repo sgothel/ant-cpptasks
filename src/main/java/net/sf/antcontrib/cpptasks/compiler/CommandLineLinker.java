@@ -53,6 +53,8 @@ public abstract class CommandLineLinker extends AbstractLinker
     private final CommandLineLinker libtoolLinker;
     private final boolean newEnvironment = false;
     private final String outputSuffix;
+    private final boolean isGCC;
+    private final boolean isCLANG;
 
 
     /** Creates a comand line linker invocation
@@ -70,6 +72,8 @@ public abstract class CommandLineLinker extends AbstractLinker
         this.isLibtool = isLibtool;
         this.isXcoderun = isXCoderun;
         this.libtoolLinker = libtoolLinker;
+        isGCC = "gcc".equals(command);
+        isCLANG = "clang".equals(command);
     }
     public CommandLineLinker(final CommandLineLinker ld, final boolean isXCoderun) {
         super(ld);
@@ -79,6 +83,8 @@ public abstract class CommandLineLinker extends AbstractLinker
         this.isLibtool = ld.isLibtool;
         this.isXcoderun = isXCoderun;
         this.libtoolLinker = ld.libtoolLinker;
+        isGCC = "gcc".equals(command);
+        isCLANG = "clang".equals(command);
     }
     protected abstract void addBase(long base, Vector args);
 
@@ -243,8 +249,14 @@ public abstract class CommandLineLinker extends AbstractLinker
     protected final boolean getLibtool() {
         return isLibtool;
     }
-    protected final boolean getXcodeRun() {
+    protected final boolean isXcodeRun() {
         return isXcoderun;
+    }
+    protected final boolean isGCC() {
+        return isGCC;
+    }
+    protected final boolean isCLANG() {
+        return isCLANG;
     }
     /**
      * Performs a link using a command line linker
