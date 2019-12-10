@@ -34,8 +34,8 @@
         (zipped source doesn't contain xdocs proposal)  -->
   <property name="ant-src.dir" location="/ant-src/ant"/>
   <property name="xdocs.dir" location="${ant-src.dir}/proposal/xdocs"/>
-  <property name="javac.source" value="1.6"/>
-  <property name="javac.target" value="1.6"/>
+  <property name="javac.source" value="1.8"/>
+  <property name="javac.target" value="1.8"/>
 
   <!--
        ===================================================================
