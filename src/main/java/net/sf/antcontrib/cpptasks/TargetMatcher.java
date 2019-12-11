@@ -97,10 +97,12 @@ public final class TargetMatcher implements FileVisitor {
                 final TargetInfo previousTarget = (TargetInfo) targets
                         .get(outputFileNames[i]);
                 if (previousTarget == null) {
-                    targets.put(outputFileNames[i], new TargetInfo(
-                            selectedCompiler, sourceFiles, null, new File(
-                                    outputDir, outputFileNames[i]),
-                            selectedCompiler.getRebuild()));
+                    targets.put( outputFileNames[i],
+                            new TargetInfo (
+                                selectedCompiler, sourceFiles, null, new File(
+                                outputDir, outputFileNames[i]), outputFileNames[i],
+                                selectedCompiler.getRebuild() )
+                               );
                 } else {
                     if (!previousTarget.getSources()[0].equals(sourceFiles[0])) {
                         final StringBuffer builder = new StringBuffer(

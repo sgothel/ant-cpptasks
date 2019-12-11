@@ -18,6 +18,7 @@ package net.sf.antcontrib.cpptasks.compiler;
 import net.sf.antcontrib.cpptasks.CCTask;
 import net.sf.antcontrib.cpptasks.LinkerParam;
 import net.sf.antcontrib.cpptasks.TargetInfo;
+import net.sf.antcontrib.cpptasks.VersionInfo;
 
 import org.apache.tools.ant.BuildException;
 /**
@@ -30,4 +31,13 @@ public interface LinkerConfiguration extends ProcessorConfiguration {
     void link(CCTask task, TargetInfo linkTarget) throws BuildException;
     Linker getLinker();
     boolean isDebug();
+    /**
+     * Unique output file for linker, also being used to fill a one element array
+     * of {@link #getOutputFileNames(String, VersionInfo)} implementation.
+     * @param inputFile the input file basename
+     * @param versionInfo the version number
+     * @return the unique output filename
+     * @see #getOutputFileNames(String, VersionInfo)
+     */
+    String getOutputFileName(final String inputFile, final VersionInfo versionInfo);
 }

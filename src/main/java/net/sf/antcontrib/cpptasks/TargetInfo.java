@@ -25,11 +25,12 @@ public final class TargetInfo {
     private static final File[] emptyFileArray = new File[0];
     private final ProcessorConfiguration config;
     private final File output;
+    private final String outputBasename;
     private boolean rebuild;
     private final File[] sources;
     private File[] sysSources;
-    public TargetInfo(ProcessorConfiguration config, File[] sources,
-            File[] sysSources, File output, boolean rebuild) {
+    public TargetInfo(final ProcessorConfiguration config, final File[] sources,
+            final File[] sysSources, final File output, final String outputBasename, boolean rebuild) {
         if (config == null) {
             throw new NullPointerException("config");
         }
@@ -39,6 +40,9 @@ public final class TargetInfo {
         if (output == null) {
             throw new NullPointerException("output");
         }
+        if (outputBasename == null) {
+            throw new NullPointerException("outputBasename");
+        }
         this.config = config;
         this.sources = sources.clone();
         if (sysSources == null) {
@@ -47,6 +51,7 @@ public final class TargetInfo {
             this.sysSources = sysSources.clone();
         }
         this.output = output;
+        this.outputBasename = outputBasename;
         this.rebuild = rebuild;
         //
         //   if the output doesn't exist, must rebuild it
@@ -82,6 +87,12 @@ public final class TargetInfo {
     }
     public File getOutput() {
         return output;
+    }
+    /**
+     * @return like 'libgluegen-rt.so'
+     */
+    public String getOutputBasename() {
+        return outputBasename;
     }
     public boolean getRebuild() {
         return rebuild;

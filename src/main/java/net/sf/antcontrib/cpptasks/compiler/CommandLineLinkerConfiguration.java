@@ -92,7 +92,12 @@ public final class CommandLineLinkerConfiguration
     public final String[] getOutputFileNames(final String inputFile, final VersionInfo versionInfo) {
         return linker.getOutputFileNames(inputFile, versionInfo);
     }
-    public LinkerParam getParam(String name) {
+    @Override
+    public final String getOutputFileName(final String inputFile, final VersionInfo versionInfo) {
+        return linker.getOutputFileName(inputFile, versionInfo);
+    }
+    @Override
+    public LinkerParam getParam(final String name) {
         for (int i = 0; i < params.length; i++) {
             if (name.equals(params[i].getName()))
                 return (LinkerParam) params[i];

@@ -874,11 +874,11 @@ public class CCTask extends Task {
         objectFiles.copyInto(objectFileArray);
         final File[] sysObjectFileArray = new File[sysObjectFiles.size()];
         sysObjectFiles.copyInto(sysObjectFileArray);
-        final String baseName = _outfile.getName();
-        final String[] fullNames = linkerConfig.getOutputFileNames(baseName, versionInfo);
-        final File outputFile = new File(_outfile.getParent(), fullNames[0]);
+        final String outputBaseNameWithDir = _outfile.getName(); // like '/use/lib/gluegen_rt'
+        final String outputFullName = linkerConfig.getOutputFileName(outputBaseNameWithDir, versionInfo); // like 'libgluegen-rt.so'
+        final File outputFile = new File(_outfile.getParent(), outputFullName);
         return new TargetInfo(linkerConfig, objectFileArray,
-                sysObjectFileArray, outputFile, linkerConfig.getRebuild());
+                sysObjectFileArray, outputFile, outputFullName, linkerConfig.getRebuild());
     }
     public File getObjdir() {
         return _objDir;

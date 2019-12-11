@@ -261,14 +261,9 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
     public int getMaximumCommandLength() {
         return Integer.MAX_VALUE;
     }
-    public String[] getOutputFileNames(final String baseName, final VersionInfo versionInfo) {
-            final String[] baseNames = super.getOutputFileNames(baseName, versionInfo);
-            if (outputPrefix.length() > 0) {
-                    for(int i = 0; i < baseNames.length; i++) {
-                            baseNames[i] = outputPrefix + baseNames[i];
-                    }
-            }
-        return baseNames;
+    @Override
+    public String getOutputFileName(final String baseName, final VersionInfo versionInfo) {
+        return outputPrefix + super.getOutputFileName(baseName, versionInfo);
     }
     @Override
     public String[] getOutputFileSwitch(final String outputFile) {

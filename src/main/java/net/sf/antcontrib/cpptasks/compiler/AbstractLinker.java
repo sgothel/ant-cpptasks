@@ -92,7 +92,23 @@ public abstract class AbstractLinker extends AbstractProcessor
     public String getLibraryKey(final File libfile) {
         return libfile.getName();
     }
-    public abstract String[] getOutputFileNames(String fileName, VersionInfo versionInfo);
+    /**
+     * This implementation for a linker instance returns a unique output file
+     * as determined via {@link #getOutputFileName(String, VersionInfo)}.
+     */
+    @Override
+    public final String[] getOutputFileNames(final String baseName, final VersionInfo versionInfo) {
+        return new String[] { getOutputFileName(baseName, versionInfo) };
+    }
+    /**
+     * Unique output file for linker, also being used to fill a one element array
+     * of {@link #getOutputFileNames(String, VersionInfo)} implementation.
+     * @param inputFile the input file basename
+     * @param versionInfo the version number
+     * @return the unique output filename
+     * @see #getOutputFileNames(String, VersionInfo)
+     */
+    public abstract String getOutputFileName(String fileName, VersionInfo versionInfo);
 
 
     /**

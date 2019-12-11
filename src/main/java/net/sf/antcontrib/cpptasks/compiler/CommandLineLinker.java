@@ -236,8 +236,9 @@ public abstract class CommandLineLinker extends AbstractLinker
     }
     protected abstract int getMaximumCommandLength();
 
-    public String[] getOutputFileNames(final String baseName, final VersionInfo versionInfo) {
-        return new String[] { baseName + outputSuffix };
+    @Override
+    public String getOutputFileName(final String baseName, final VersionInfo versionInfo) {
+        return baseName + outputSuffix;
     }
 
     protected String[] getOutputFileSwitch(final CCTask task, final String outputFile) {
