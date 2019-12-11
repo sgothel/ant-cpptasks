@@ -29,18 +29,18 @@ import org.apache.tools.ant.BuildException;
  * @author Curt Arnold
  */
 public final class TargetMatcher implements FileVisitor {
-    private LinkerConfiguration linker;
-    private Vector objectFiles;
-    private File outputDir;
-    private ProcessorConfiguration[] processors;
+    private final LinkerConfiguration linker;
+    private final Vector objectFiles;
+    private final File outputDir;
+    private final ProcessorConfiguration[] processors;
     private final File sourceFiles[] = new File[1];
-    private Hashtable targets;
-    private VersionInfo versionInfo;
-    private CCTask task;
-    public TargetMatcher(CCTask task, File outputDir,
-            ProcessorConfiguration[] processors, LinkerConfiguration linker,
-            Vector objectFiles, Hashtable targets,
-			VersionInfo versionInfo) {
+    private final Hashtable targets;
+    private final VersionInfo versionInfo;
+    private final CCTask task;
+    public TargetMatcher(final CCTask task, final File outputDir,
+            final ProcessorConfiguration[] processors, final LinkerConfiguration linker,
+            final Vector objectFiles, final Hashtable targets,
+			final VersionInfo versionInfo) {
         this.task = task;
         this.outputDir = outputDir;
         this.processors = processors;
@@ -49,8 +49,8 @@ public final class TargetMatcher implements FileVisitor {
         this.objectFiles = objectFiles;
         this.versionInfo = versionInfo;
     }
-    public void visit(File parentDir, String filename) throws BuildException {
-        File fullPath = new File(parentDir, filename);
+    public void visit(final File parentDir, final String filename) throws BuildException {
+        final File fullPath = new File(parentDir, filename);
         //
         //   see if any processor wants to bid
         //       on this one
@@ -58,7 +58,7 @@ public final class TargetMatcher implements FileVisitor {
         int bid = 0;
         if (processors != null) {
             for (int k = 0; k < processors.length; k++) {
-                int newBid = processors[k].bid(fullPath.toString());
+                final int newBid = processors[k].bid(fullPath.toString());
                 if (newBid > bid) {
                     bid = newBid;
                     selectedCompiler = processors[k];
@@ -70,7 +70,7 @@ public final class TargetMatcher implements FileVisitor {
         //      log diagnostic message
         if (bid <= 0) {
             if (linker != null) {
-                int linkerbid = linker.bid(filename);
+                final int linkerbid = linker.bid(filename);
                 if (linkerbid > 0) {
                     objectFiles.addElement(fullPath);
                     if (linkerbid == 1) {
@@ -83,7 +83,7 @@ public final class TargetMatcher implements FileVisitor {
             //
             //  get output file name
             //
-            String[] outputFileNames = selectedCompiler
+            final String[] outputFileNames = selectedCompiler
                     .getOutputFileNames(filename, versionInfo);
             sourceFiles[0] = fullPath;
             //
@@ -94,7 +94,7 @@ public final class TargetMatcher implements FileVisitor {
                 //
                 //   see if the same output file has already been registered
                 //
-                TargetInfo previousTarget = (TargetInfo) targets
+                final TargetInfo previousTarget = (TargetInfo) targets
                         .get(outputFileNames[i]);
                 if (previousTarget == null) {
                     targets.put(outputFileNames[i], new TargetInfo(
@@ -103,7 +103,7 @@ public final class TargetMatcher implements FileVisitor {
                             selectedCompiler.getRebuild()));
                 } else {
                     if (!previousTarget.getSources()[0].equals(sourceFiles[0])) {
-                        StringBuffer builder = new StringBuffer(
+                        final StringBuffer builder = new StringBuffer(
                                 "Output filename conflict: ");
                         builder.append(outputFileNames[i]);
                         builder.append(" would be produced from ");

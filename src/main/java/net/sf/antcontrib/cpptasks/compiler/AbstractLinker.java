@@ -34,10 +34,10 @@ import org.apache.tools.ant.types.Environment;
 public abstract class AbstractLinker extends AbstractProcessor
         implements
             Linker {
-    public AbstractLinker(String[] objExtensions, String[] ignoredExtensions) {
+    public AbstractLinker(final String[] objExtensions, final String[] ignoredExtensions) {
         super(objExtensions, ignoredExtensions);
     }
-    public AbstractLinker(AbstractLinker ld) {
+    public AbstractLinker(final AbstractLinker ld) {
         super(ld);
     }
     /**
@@ -51,8 +51,9 @@ public abstract class AbstractLinker extends AbstractProcessor
      *         processor recognizes the file but doesn't process it (header
      *         files, for example), 100 indicates strong interest
      */
-    public int bid(String inputFile) {
-        int bid = super.bid(inputFile);
+    @Override
+    public int bid(final String inputFile) {
+        final int bid = super.bid(inputFile);
         switch (bid) {
             //
             //  unrecognized extension, take the file
@@ -67,25 +68,28 @@ public abstract class AbstractLinker extends AbstractProcessor
         }
         return bid;
     }
-    public Processor changeEnvironment(boolean newEnvironment, Environment env) {
+    @Override
+    public Processor changeEnvironment(final boolean newEnvironment, final Environment env) {
         return this;
     }
     abstract protected LinkerConfiguration createConfiguration(CCTask task,
             LinkType linkType, ProcessorDef[] baseConfigs,
             LinkerDef specificConfig, TargetDef targetPlatform,
 			VersionInfo versionInfo);
-    public ProcessorConfiguration createConfiguration(CCTask task,
-            LinkType linkType, ProcessorDef[] baseConfigs,
-            ProcessorDef specificConfig,
-			TargetDef targetPlatform,
-			VersionInfo versionInfo) {
+    @Override
+    public ProcessorConfiguration createConfiguration(final CCTask task,
+            final LinkType linkType, final ProcessorDef[] baseConfigs,
+            final ProcessorDef specificConfig,
+			final TargetDef targetPlatform,
+			final VersionInfo versionInfo) {
         if (specificConfig == null) {
             throw new NullPointerException("specificConfig");
         }
         return createConfiguration(task, linkType, baseConfigs,
                 (LinkerDef) specificConfig, targetPlatform, versionInfo);
     }
-    public String getLibraryKey(File libfile) {
+    @Override
+    public String getLibraryKey(final File libfile) {
         return libfile.getName();
     }
     public abstract String[] getOutputFileNames(String fileName, VersionInfo versionInfo);
@@ -102,7 +106,8 @@ public abstract class AbstractLinker extends AbstractProcessor
      * @param objDir directory for generated files
      * @param matcher bidded fileset
      */
-	public void addVersionFiles(final VersionInfo versionInfo,
+	@Override
+    public void addVersionFiles(final VersionInfo versionInfo,
 			final LinkType linkType,
 			final File outputFile,
 			final boolean isDebug,

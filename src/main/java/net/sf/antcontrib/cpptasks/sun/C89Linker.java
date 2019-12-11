@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Copyright 2002-2004 The Ant-Contrib project
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,7 +29,7 @@ import net.sf.antcontrib.cpptasks.VersionInfo;
 
 /**
  * Adapter for the Sun C89 Linker
- * 
+ *
  * @author Hiram Chirino (cojonudo14@hotmail.com)
  */
 public final class C89Linker extends CommandLineLinker {
@@ -38,31 +38,36 @@ public final class C89Linker extends CommandLineLinker {
     public static C89Linker getInstance() {
         return instance;
     }
-    private String outputPrefix;
-    private C89Linker(String outputPrefix, String outputSuffix) {
+    private final String outputPrefix;
+    private C89Linker(final String outputPrefix, final String outputSuffix) {
         super("ld", "/bogus", new String[]{".o", ".a", ".lib", ".x"},
                 new String[]{}, outputSuffix, false, false, null);
         this.outputPrefix = outputPrefix;
     }
-    protected void addBase(long base, Vector args) {
+    @Override
+    protected void addBase(final long base, final Vector args) {
     }
-    protected void addFixed(Boolean fixed, Vector args) {
+    @Override
+    protected void addFixed(final Boolean fixed, final Vector args) {
     }
-    protected void addImpliedArgs(boolean debug, LinkType linkType, Vector args) {
+    @Override
+    protected void addImpliedArgs(final boolean debug, final LinkType linkType, final Vector args) {
         if (linkType.isSharedLibrary()) {
             args.addElement("-G");
         }
     }
-    protected void addIncremental(boolean incremental, Vector args) {
+    @Override
+    protected void addIncremental(final boolean incremental, final Vector args) {
     }
-    public String[] addLibrarySets(CCTask task, LibrarySet[] libsets,
-            Vector preargs, Vector midargs, Vector endargs) {
+    @Override
+    public String[] addLibrarySets(final CCTask task, final LibrarySet[] libsets,
+            final Vector preargs, final Vector midargs, final Vector endargs) {
         super.addLibrarySets(task, libsets, preargs, midargs, endargs);
-        StringBuffer buf = new StringBuffer("-l");
+        final StringBuffer buf = new StringBuffer("-l");
         for (int i = 0; i < libsets.length; i++) {
-            LibrarySet set = libsets[i];
-            File libdir = set.getDir(null);
-            String[] libs = set.getLibs();
+            final LibrarySet set = libsets[i];
+            final File libdir = set.getDir(null);
+            final String[] libs = set.getLibs();
             if (libdir != null) {
                 endargs.addElement("-L");
                 endargs.addElement(libdir.getAbsolutePath());
@@ -82,26 +87,33 @@ public final class C89Linker extends CommandLineLinker {
         }
         return null;
     }
-    protected void addMap(boolean map, Vector args) {
+    @Override
+    protected void addMap(final boolean map, final Vector args) {
     }
-    protected void addStack(int stack, Vector args) {
+    @Override
+    protected void addStack(final int stack, final Vector args) {
     }
     /* (non-Javadoc)
      * @see net.sf.antcontrib.cpptasks.compiler.CommandLineLinker#addEntry(int, java.util.Vector)
      */
-    protected void addEntry(String entry, Vector args) {
+    @Override
+    protected void addEntry(final String entry, final Vector args) {
     }
-    
-    public String getCommandFileSwitch(String commandFile) {
+
+    @Override
+    public String getCommandFileSwitch(final String commandFile) {
         return "@" + commandFile;
     }
+    @Override
     public File[] getLibraryPath() {
         return CUtil.getPathFromEnvironment("LIB", ";");
     }
-    public String[] getLibraryPatterns(String[] libnames, LibraryTypeEnum libType) {
+    @Override
+    public String[] getLibraryPatterns(final String[] libnames, final LibraryTypeEnum libType) {
         return C89Processor.getLibraryPatterns(libnames, libType);
     }
-    public Linker getLinker(LinkType linkType) {
+    @Override
+    public Linker getLinker(final LinkType linkType) {
         if (linkType.isSharedLibrary()) {
             return dllLinker;
         }
@@ -111,6 +123,7 @@ public final class C89Linker extends CommandLineLinker {
          */
         return instance;
     }
+    @Override
     public int getMaximumCommandLength() {
         return Integer.MAX_VALUE;
     }
@@ -123,9 +136,11 @@ public final class C89Linker extends CommandLineLinker {
     	}
         return baseNames;
     }
-    public String[] getOutputFileSwitch(String outputFile) {
+    @Override
+    public String[] getOutputFileSwitch(final String outputFile) {
         return new String[]{"-o", outputFile};
     }
+    @Override
     public boolean isCaseSensitive() {
         return C89Processor.isCaseSensitive();
     }

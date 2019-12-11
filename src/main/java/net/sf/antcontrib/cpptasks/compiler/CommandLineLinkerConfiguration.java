@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Copyright 2002-2004 The Ant-Contrib project
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,35 +24,35 @@ import net.sf.antcontrib.cpptasks.VersionInfo;
 import org.apache.tools.ant.BuildException;
 /**
  * A configuration for a command line linker
- * 
+ *
  * @author Curt Arnold
  */
 public final class CommandLineLinkerConfiguration
         implements
             LinkerConfiguration {
     private/* final */String[][] args;
-    private/* final */String identifier;
+    private final /* final */String identifier;
     private String[] libraryNames;
-    private/* final */CommandLineLinker linker;
-    private/* final */boolean map;
-    private/* final */ProcessorParam[] params;
-    private/* final */boolean rebuild;
-    private boolean debug;
-    private String startupObject;
-    public CommandLineLinkerConfiguration(CommandLineLinker linker,
-            String identifier, String[][] args, ProcessorParam[] params,
-            boolean rebuild, boolean map, boolean debug, String[] libraryNames,
-            String startupObject) {
+    private final /* final */CommandLineLinker linker;
+    private final /* final */boolean map;
+    private final /* final */ProcessorParam[] params;
+    private final /* final */boolean rebuild;
+    private final boolean debug;
+    private final String startupObject;
+    public CommandLineLinkerConfiguration(final CommandLineLinker linker,
+            final String identifier, final String[][] args, final ProcessorParam[] params,
+            final boolean rebuild, final boolean map, final boolean debug, final String[] libraryNames,
+            final String startupObject) {
         if (linker == null) {
             throw new NullPointerException("linker");
         }
         if (args == null) {
             throw new NullPointerException("args");
         } else {
-            this.args = (String[][]) args.clone();
+            this.args = args.clone();
         }
         this.linker = linker;
-        this.params = (ProcessorParam[]) params.clone();
+        this.params = params.clone();
         this.rebuild = rebuild;
         this.identifier = identifier;
         this.map = map;
@@ -60,15 +60,16 @@ public final class CommandLineLinkerConfiguration
         if (libraryNames == null) {
             this.libraryNames = new String[0];
         } else {
-            this.libraryNames = (String[]) libraryNames.clone();
+            this.libraryNames = libraryNames.clone();
         }
         this.startupObject = startupObject;
     }
-    public int bid(String filename) {
+    @Override
+    public int bid(final String filename) {
         return linker.bid(filename);
     }
     public String[] getEndArguments() {
-        String[] clone = (String[]) args[1].clone();
+        final String[] clone = args[1].clone();
         return clone;
     }
     /**
@@ -76,17 +77,19 @@ public final class CommandLineLinkerConfiguration
      * canonical so that equivalent configurations will have equivalent string
      * representations
      */
+    @Override
     public String getIdentifier() {
         return identifier;
     }
     public String[] getLibraryNames() {
-        String[] clone = (String[]) libraryNames.clone();
+        final String[] clone = libraryNames.clone();
         return clone;
     }
     public boolean getMap() {
         return map;
     }
-    public String[] getOutputFileNames(String inputFile, VersionInfo versionInfo) {
+    @Override
+    public final String[] getOutputFileNames(final String inputFile, final VersionInfo versionInfo) {
         return linker.getOutputFileNames(inputFile, versionInfo);
     }
     public LinkerParam getParam(String name) {
@@ -96,32 +99,38 @@ public final class CommandLineLinkerConfiguration
         }
         return null;
     }
+    @Override
     public ProcessorParam[] getParams() {
         return params;
     }
     public String[] getPreArguments() {
-        String[] clone = (String[]) args[0].clone();
+        final String[] clone = args[0].clone();
         return clone;
     }
+    @Override
     public boolean getRebuild() {
         return rebuild;
     }
     public String getStartupObject() {
         return startupObject;
     }
-    public void link(CCTask task, TargetInfo linkTarget) throws BuildException {
+    @Override
+    public void link(final CCTask task, final TargetInfo linkTarget) throws BuildException {
         //
         //  AllSourcePath's include any syslibsets
         //
-        String[] sourcePaths = linkTarget.getAllSourcePaths();
+        final String[] sourcePaths = linkTarget.getAllSourcePaths();
         linker.link(task, linkTarget.getOutput(), sourcePaths, this);
     }
+    @Override
     public String toString() {
         return identifier;
     }
+    @Override
     public Linker getLinker() {
     	return linker;
     }
+    @Override
     public boolean isDebug() {
     	return debug;
     }

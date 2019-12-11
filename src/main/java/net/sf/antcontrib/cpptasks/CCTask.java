@@ -127,6 +127,7 @@ public class CCTask extends Task {
             this.linker = linker;
             this.libraries = libraries;
         }
+        @Override
         public void visit(final File basedir, final String filename) {
             if (linker.bid(filename) > 0) {
                 final File libfile = new File(basedir, filename);
@@ -150,6 +151,7 @@ public class CCTask extends Task {
          * @param parentDir parent directory
          * @param filename filename within directory
          */
+        @Override
         public void visit(final File parentDir, final String filename)  {
             files.add(new File(parentDir, filename));
         }
@@ -569,6 +571,7 @@ public class CCTask extends Task {
      * @throws BuildException
      *             if someting goes wrong with the build
      */
+    @Override
     public void execute() throws BuildException {
         //
         //   if link type allowed objdir to be defaulted
@@ -1101,6 +1104,7 @@ public class CCTask extends Task {
      *
      * @deprecated
      */
+    @Deprecated
     public void setLink(final OutputTypeEnum outputType) {
         linkType.setOutputType(outputType);
     }
@@ -1316,6 +1320,7 @@ public class CCTask extends Task {
     /**
      * Sets the project.
      */
+    @Override
     public void setProject(final Project project) {
         super.setProject(project);
         compilerDef.setProject(project);

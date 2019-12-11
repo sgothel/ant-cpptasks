@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Copyright 2001-2004 The Ant-Contrib project
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,48 +28,59 @@ import net.sf.antcontrib.cpptasks.types.LibraryTypeEnum;
 import org.apache.tools.ant.BuildException;
 /**
  * Adapter for the "ar" tool
- * 
+ *
  * @author Adam Murdoch
  * @author Curt Arnold
  */
 public abstract class AbstractArLibrarian extends CommandLineLinker {
-    private/* final */
+    private final /* final */
     String outputPrefix;
-    protected AbstractArLibrarian(String command, String identificationArg,
-            String[] inputExtensions, String[] ignoredExtensions,
-            String outputPrefix, String outputExtension, boolean isLibtool,
-            AbstractArLibrarian libtoolLibrarian) {
+    protected AbstractArLibrarian(final String command, final String identificationArg,
+            final String[] inputExtensions, final String[] ignoredExtensions,
+            final String outputPrefix, final String outputExtension, final boolean isLibtool,
+            final AbstractArLibrarian libtoolLibrarian) {
         super(command, identificationArg, inputExtensions, ignoredExtensions,
                 outputExtension, false, isLibtool, libtoolLibrarian);
         this.outputPrefix = outputPrefix;
     }
-    public void addBase(long base, Vector args) {
+    @Override
+    public void addBase(final long base, final Vector args) {
     }
-    public void addFixed(Boolean fixed, Vector args) {
+    @Override
+    public void addFixed(final Boolean fixed, final Vector args) {
     }
-    public void addImpliedArgs(boolean debug, LinkType linkType, Vector args) {
+    @Override
+    public void addImpliedArgs(final boolean debug, final LinkType linkType, final Vector args) {
     }
-    public void addIncremental(boolean incremental, Vector args) {
+    @Override
+    public void addIncremental(final boolean incremental, final Vector args) {
     }
-    public void addMap(boolean map, Vector args) {
+    @Override
+    public void addMap(final boolean map, final Vector args) {
     }
-    public void addStack(int stack, Vector args) {
+    @Override
+    public void addStack(final int stack, final Vector args) {
     }
     /* (non-Javadoc)
      * @see net.sf.antcontrib.cpptasks.compiler.CommandLineLinker#addEntry(int, java.util.Vector)
      */
-    protected void addEntry(String entry, Vector args) {
+    @Override
+    protected void addEntry(final String entry, final Vector args) {
     }
-    
-    public String getCommandFileSwitch(String commandFile) {
+
+    @Override
+    public String getCommandFileSwitch(final String commandFile) {
         return null;
     }
+    @Override
     public File[] getLibraryPath() {
         return new File[0];
     }
-    public String[] getLibraryPatterns(String[] libnames, LibraryTypeEnum libType) {
+    @Override
+    public String[] getLibraryPatterns(final String[] libnames, final LibraryTypeEnum libType) {
     	return new String[0];
     }
+    @Override
     public int getMaximumCommandLength() {
         return Integer.MAX_VALUE;
     }
@@ -82,14 +93,17 @@ public abstract class AbstractArLibrarian extends CommandLineLinker {
     	}
         return baseNames;
     }
-    public String[] getOutputFileSwitch(String outputFile) {
+    @Override
+    public String[] getOutputFileSwitch(final String outputFile) {
         return GccProcessor.getOutputFileSwitch("rvs", outputFile);
     }
+    @Override
     public boolean isCaseSensitive() {
         return true;
     }
-    public void link(CCTask task, File outputFile, String[] sourceFiles,
-            CommandLineLinkerConfiguration config) throws BuildException {
+    @Override
+    public void link(final CCTask task, final File outputFile, final String[] sourceFiles,
+            final CommandLineLinkerConfiguration config) throws BuildException {
         //
         //   if there is an existing library then
         //      we must delete it before executing "ar"

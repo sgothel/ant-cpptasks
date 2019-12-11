@@ -105,6 +105,7 @@ public abstract class CommandLineLinker extends AbstractLinker
     protected abstract void addStack(int stack, Vector args);
     protected abstract void addEntry(String entry, Vector args);
 
+    @Override
     protected LinkerConfiguration createConfiguration(
       final CCTask task,
       final LinkType linkType,
@@ -215,7 +216,8 @@ public abstract class CommandLineLinker extends AbstractLinker
     protected abstract String getCommandFileSwitch(String commandFile);
 
 
-     public String getIdentifier() {
+     @Override
+    public String getIdentifier() {
       if(identifier == null) {
         if (identifierArg == null) {
           identifier = getIdentifier(new String[] { command }, command);

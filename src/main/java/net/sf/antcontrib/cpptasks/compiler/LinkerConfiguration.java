@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Copyright 2002-2004 The Ant-Contrib project
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,7 @@ import net.sf.antcontrib.cpptasks.TargetInfo;
 import org.apache.tools.ant.BuildException;
 /**
  * A configuration for a linker
- * 
+ *
  * @author Curt Arnold
  */
 public interface LinkerConfiguration extends ProcessorConfiguration {

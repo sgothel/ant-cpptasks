@@ -46,14 +46,17 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
         super(ld, isXCoderun);
         this.outputPrefix = ld.outputPrefix;
     }
+    @Override
     public void addBase(final long base, final Vector args) {
             if (base >= 0) {
                     args.addElement("--image-base");
                     args.addElement(Long.toHexString(base));
             }
     }
+    @Override
     public void addFixed(final Boolean fixed, final Vector args) {
     }
+    @Override
     protected void addImpliedArgs(final boolean debug, final LinkType linkType, final Vector args) {
         if (debug) {
             args.addElement("-g");
@@ -83,6 +86,7 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
             }
         }
     }
+    @Override
     public void addIncremental(final boolean incremental, final Vector args) {
             if (incremental) {
                     args.addElement("-i");
@@ -99,6 +103,7 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
         }
         return offset + libnames.length;
     }
+    @Override
     public String[] addLibrarySets(final CCTask task, final LibrarySet[] libsets,
             final Vector preargs, final Vector midargs, final Vector endargs) {
         final Vector libnames = new Vector();
@@ -167,11 +172,13 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
         }
         return rc;
     }
+    @Override
     public void addMap(final boolean map, final Vector args) {
             if (map) {
                     args.addElement("-M");
             }
     }
+    @Override
     public void addStack(final int stack, final Vector args) {
             if (stack > 0) {
                     args.addElement("--stack");
@@ -181,6 +188,7 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
     /* (non-Javadoc)
      * @see net.sf.antcontrib.cpptasks.compiler.CommandLineLinker#addEntry(int, java.util.Vector)
      */
+    @Override
     protected void addEntry(final String entry, final Vector args) {
             if (entry != null) {
                     args.addElement("-e");
@@ -188,6 +196,7 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
             }
     }
 
+    @Override
     public String getCommandFileSwitch(final String commandFile) {
         throw new IllegalStateException("ld does not support command files");
     }
@@ -198,6 +207,7 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
     protected File[] getEnvironmentIncludePath() {
         return CUtil.getPathFromEnvironment("LIB", ":");
     }
+    @Override
     public String getLibraryKey(final File libfile) {
         final String libname = libfile.getName();
         final int lastDot = libname.lastIndexOf('.');
@@ -210,9 +220,11 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
      * Returns library path.
      *
      */
+    @Override
     public File[] getLibraryPath() {
         return new File[0];
     }
+    @Override
     public String[] getLibraryPatterns(final String[] libnames, final LibraryTypeEnum libType) {
         final StringBuffer buf = new StringBuffer();
         int patternCount = libnames.length;
@@ -245,6 +257,7 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
         }
         return patterns;
     }
+    @Override
     public int getMaximumCommandLength() {
         return Integer.MAX_VALUE;
     }
@@ -257,10 +270,12 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
             }
         return baseNames;
     }
+    @Override
     public String[] getOutputFileSwitch(final String outputFile) {
         return GccProcessor.getOutputFileSwitch("-o", outputFile);
     }
 
+    @Override
     public boolean isCaseSensitive() {
         return true;
     }
@@ -283,6 +298,7 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
      *            linker configuration
      * @return arguments for runTask
      */
+    @Override
     public String[] prepareArguments(final CCTask task, final String outputDir,
             final String outputFile, final String[] sourceFiles,
             final CommandLineLinkerConfiguration config) {

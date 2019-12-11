@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Copyright 2002-2004 The Ant-Contrib project
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,10 +23,10 @@ import net.sf.antcontrib.cpptasks.compiler.ProcessorConfiguration;
  */
 public final class TargetInfo {
     private static final File[] emptyFileArray = new File[0];
-    private/* final */ProcessorConfiguration config;
-    private/* final */File output;
+    private final ProcessorConfiguration config;
+    private final File output;
     private boolean rebuild;
-    private/* final */File[] sources;
+    private final File[] sources;
     private File[] sysSources;
     public TargetInfo(ProcessorConfiguration config, File[] sources,
             File[] sysSources, File output, boolean rebuild) {
@@ -40,11 +40,11 @@ public final class TargetInfo {
             throw new NullPointerException("output");
         }
         this.config = config;
-        this.sources = (File[]) sources.clone();
+        this.sources = sources.clone();
         if (sysSources == null) {
             this.sysSources = emptyFileArray;
         } else {
-            this.sysSources = (File[]) sysSources.clone();
+            this.sysSources = sysSources.clone();
         }
         this.output = output;
         this.rebuild = rebuild;
@@ -56,22 +56,22 @@ public final class TargetInfo {
         }
     }
     public String[] getAllSourcePaths() {
-        String[] paths = new String[sysSources.length + sources.length];
+        final String[] paths = new String[sysSources.length + sources.length];
         for (int i = 0; i < sysSources.length; i++) {
             paths[i] = sysSources[i].toString();
         }
-        int offset = sysSources.length;
+        final int offset = sysSources.length;
         for (int i = 0; i < sources.length; i++) {
             paths[offset + i] = sources[i].toString();
         }
         return paths;
     }
     public File[] getAllSources() {
-        File[] allSources = new File[sources.length + sysSources.length];
+        final File[] allSources = new File[sources.length + sysSources.length];
         for (int i = 0; i < sysSources.length; i++) {
             allSources[i] = sysSources[i];
         }
-        int offset = sysSources.length;
+        final int offset = sysSources.length;
         for (int i = 0; i < sources.length; i++) {
             allSources[i + offset] = sources[i];
         }
@@ -90,35 +90,35 @@ public final class TargetInfo {
      * Returns an array of SourceHistory objects (contains relative path and
      * last modified time) for the source[s] of this target
      */
-    public SourceHistory[] getSourceHistories(String basePath) {
-        SourceHistory[] histories = new SourceHistory[sources.length];
+    public SourceHistory[] getSourceHistories(final String basePath) {
+        final SourceHistory[] histories = new SourceHistory[sources.length];
         for (int i = 0; i < sources.length; i++) {
-            String relativeName = CUtil.getRelativePath(basePath, sources[i]);
-            long lastModified = sources[i].lastModified();
+            final String relativeName = CUtil.getRelativePath(basePath, sources[i]);
+            final long lastModified = sources[i].lastModified();
             histories[i] = new SourceHistory(relativeName, lastModified);
         }
         return histories;
     }
     public String[] getSourcePaths() {
-        String[] paths = new String[sources.length];
+        final String[] paths = new String[sources.length];
         for (int i = 0; i < sources.length; i++) {
             paths[i] = sources[i].toString();
         }
         return paths;
     }
     public File[] getSources() {
-        File[] clone = (File[]) sources.clone();
+        final File[] clone = sources.clone();
         return clone;
     }
     public String[] getSysSourcePaths() {
-        String[] paths = new String[sysSources.length];
+        final String[] paths = new String[sysSources.length];
         for (int i = 0; i < sysSources.length; i++) {
             paths[i] = sysSources[i].toString();
         }
         return paths;
     }
     public File[] getSysSources() {
-        File[] clone = (File[]) sysSources.clone();
+        final File[] clone = sysSources.clone();
         return clone;
     }
     public void mustRebuild() {

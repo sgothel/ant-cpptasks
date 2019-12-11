@@ -41,12 +41,12 @@ public abstract class AbstractCompiler extends AbstractProcessor
             Compiler {
     private static final String[] emptyIncludeArray = new String[0];
     private final String outputSuffix;
-    protected AbstractCompiler(String[] sourceExtensions,
-            String[] headerExtensions, String outputSuffix) {
+    protected AbstractCompiler(final String[] sourceExtensions,
+            final String[] headerExtensions, final String outputSuffix) {
         super(sourceExtensions, headerExtensions);
         this.outputSuffix = outputSuffix;
     }
-    protected AbstractCompiler(AbstractCompiler cc) {
+    protected AbstractCompiler(final AbstractCompiler cc) {
         super(cc);
         this.outputSuffix = cc.outputSuffix;
     }
@@ -57,11 +57,11 @@ public abstract class AbstractCompiler extends AbstractProcessor
      * 'tlb', '.res'
      *
      */
-    protected boolean canParse(File sourceFile) {
-        String sourceName = sourceFile.toString();
-        int lastPeriod = sourceName.lastIndexOf('.');
+    protected boolean canParse(final File sourceFile) {
+        final String sourceName = sourceFile.toString();
+        final int lastPeriod = sourceName.lastIndexOf('.');
         if (lastPeriod >= 0 && lastPeriod == sourceName.length() - 4) {
-            String ext = sourceName.substring(lastPeriod).toUpperCase();
+            final String ext = sourceName.substring(lastPeriod).toUpperCase();
             if (ext.equals(".DLL") || ext.equals(".TLB") || ext.equals(".RES")) {
                 return false;
             }
@@ -72,10 +72,11 @@ public abstract class AbstractCompiler extends AbstractProcessor
             LinkType linkType, ProcessorDef[] baseConfigs,
             CompilerDef specificConfig, TargetDef targetPlatform,
 			VersionInfo versionInfo);
-    public ProcessorConfiguration createConfiguration(CCTask task,
-            LinkType linkType, ProcessorDef[] baseConfigs,
-            ProcessorDef specificConfig, TargetDef targetPlatform,
-			VersionInfo versionInfo) {
+    @Override
+    public ProcessorConfiguration createConfiguration(final CCTask task,
+            final LinkType linkType, final ProcessorDef[] baseConfigs,
+            final ProcessorDef specificConfig, final TargetDef targetPlatform,
+			final VersionInfo versionInfo) {
         if (specificConfig == null) {
             throw new NullPointerException("specificConfig");
         }
@@ -83,10 +84,10 @@ public abstract class AbstractCompiler extends AbstractProcessor
                 (CompilerDef) specificConfig, targetPlatform, versionInfo);
     }
     abstract protected Parser createParser(File sourceFile);
-    protected String getBaseOutputName(String inputFile) {
+    protected String getBaseOutputName(final String inputFile) {
         int lastSlash = inputFile.lastIndexOf('/');
-        int lastReverse = inputFile.lastIndexOf('\\');
-        int lastSep = inputFile.lastIndexOf(File.separatorChar);
+        final int lastReverse = inputFile.lastIndexOf('\\');
+        final int lastSep = inputFile.lastIndexOf(File.separatorChar);
         if (lastReverse > lastSlash) {
             lastSlash = lastReverse;
         }
@@ -99,12 +100,13 @@ public abstract class AbstractCompiler extends AbstractProcessor
         }
         return inputFile.substring(lastSlash + 1, lastPeriod);
     }
-    public String[] getOutputFileNames(String inputFile, VersionInfo versionInfo) {
+    @Override
+    public String[] getOutputFileNames(final String inputFile, final VersionInfo versionInfo) {
         //
         //  if a recognized input file
         //
         if (bid(inputFile) > 1) {
-            String baseName = getBaseOutputName(inputFile);
+            final String baseName = getBaseOutputName(inputFile);
             return new String[] { baseName + outputSuffix };
         }
         return new String[0];
@@ -134,40 +136,40 @@ public abstract class AbstractCompiler extends AbstractProcessor
      *            path settings
      *
      */
-    public final DependencyInfo parseIncludes(CCTask task, File source,
-            File[] includePath, File[] sysIncludePath, File[] envIncludePath,
-            File baseDir, String includePathIdentifier) {
+    public final DependencyInfo parseIncludes(final CCTask task, final File source,
+            final File[] includePath, final File[] sysIncludePath, final File[] envIncludePath,
+            final File baseDir, final String includePathIdentifier) {
         //
         //  if any of the include files can not be identified
         //      change the sourceLastModified to Long.MAX_VALUE to
         //      force recompilation of anything that depends on it
         long sourceLastModified = source.lastModified();
-        File[] sourcePath = new File[1];
+        final File[] sourcePath = new File[1];
         sourcePath[0] = new File(source.getParent());
-        Vector onIncludePath = new Vector();
-        Vector onSysIncludePath = new Vector();
+        final Vector onIncludePath = new Vector();
+        final Vector onSysIncludePath = new Vector();
         String baseDirPath;
         try {
             baseDirPath = baseDir.getCanonicalPath();
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             baseDirPath = baseDir.toString();
         }
-        String relativeSource = CUtil.getRelativePath(baseDirPath, source);
+        final String relativeSource = CUtil.getRelativePath(baseDirPath, source);
         String[] includes = emptyIncludeArray;
         if (canParse(source)) {
-            Parser parser = createParser(source);
+            final Parser parser = createParser(source);
             try {
-                Reader reader = new BufferedReader(new FileReader(source));
+                final Reader reader = new BufferedReader(new FileReader(source));
                 parser.parse(reader);
                 includes = parser.getIncludes();
-            } catch (IOException ex) {
+            } catch (final IOException ex) {
                 task.log("Error parsing " + source.toString() + ":"
                         + ex.toString());
                 includes = new String[0];
             }
         }
         for (int i = 0; i < includes.length; i++) {
-            String includeName = includes[i];
+            final String includeName = includes[i];
             if (!resolveInclude(includeName, sourcePath, onIncludePath)) {
                 if (!resolveInclude(includeName, includePath, onIncludePath)) {
                     if (!resolveInclude(includeName, sysIncludePath,
@@ -185,22 +187,22 @@ public abstract class AbstractCompiler extends AbstractProcessor
             }
         }
         for (int i = 0; i < onIncludePath.size(); i++) {
-            String relativeInclude = CUtil.getRelativePath(baseDirPath,
+            final String relativeInclude = CUtil.getRelativePath(baseDirPath,
                     (File) onIncludePath.elementAt(i));
             onIncludePath.setElementAt(relativeInclude, i);
         }
         for (int i = 0; i < onSysIncludePath.size(); i++) {
-            String relativeInclude = CUtil.getRelativePath(baseDirPath,
+            final String relativeInclude = CUtil.getRelativePath(baseDirPath,
                     (File) onSysIncludePath.elementAt(i));
             onSysIncludePath.setElementAt(relativeInclude, i);
         }
         return new DependencyInfo(includePathIdentifier, relativeSource,
                 sourceLastModified, onIncludePath, onSysIncludePath);
     }
-    protected boolean resolveInclude(String includeName, File[] includePath,
-            Vector onThisPath) {
+    protected boolean resolveInclude(final String includeName, final File[] includePath,
+            final Vector onThisPath) {
         for (int i = 0; i < includePath.length; i++) {
-            File includeFile = new File(includePath[i], includeName);
+            final File includeFile = new File(includePath[i], includeName);
             if (includeFile.exists()) {
                 onThisPath.addElement(includeFile);
                 return true;
