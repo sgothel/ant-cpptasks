@@ -31,6 +31,7 @@ import net.sf.antcontrib.cpptasks.types.CommandLineArgument;
 import net.sf.antcontrib.cpptasks.types.LibrarySet;
 import net.sf.antcontrib.cpptasks.TargetDef;
 import net.sf.antcontrib.cpptasks.VersionInfo;
+import net.sf.antcontrib.cpptasks.gcc.GccProcessor;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Environment;
@@ -328,13 +329,17 @@ public abstract class CommandLineLinker extends AbstractLinker
         final String outputDir,
         final String outputFile,
         final String[] sourceFiles,
-        final CommandLineLinkerConfiguration config) {
+        final CommandLineLinkerConfiguration config)
+    {
 
         final String[] preargs = config.getPreArguments();
         final String[] endargs = config.getEndArguments();
         final String outputSwitch[] =  getOutputFileSwitch(task, outputFile);
+        final boolean writeSONAME = task.getWriteSONAME() && task.isSharedLibrary() && ( isGCC || isCLANG );
         int allArgsCount = preargs.length + 1 + outputSwitch.length +
-                sourceFiles.length + endargs.length;
+                           sourceFiles.length + endargs.length +
+                           ( writeSONAME ? 1 : 0 );
+
         if (isLibtool) {
           allArgsCount++;
         }
@@ -353,6 +358,9 @@ public abstract class CommandLineLinker extends AbstractLinker
         final StringBuffer buf = new StringBuffer();
         for (int i = 0; i < preargs.length; i++) {
           allArgs[index++] = decorateLinkerOption(buf, preargs[i]);
+        }
+        if( writeSONAME ) {
+          allArgs[index++] = "-Wl,-h,"+GccProcessor.getEscapedOutputFile(outputFile);
         }
         for (int i = 0; i < outputSwitch.length; i++) {
           allArgs[index++] = outputSwitch[i];

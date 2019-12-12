@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Copyright 2002-2004 The Ant-Contrib project
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,8 +25,8 @@ import net.sf.antcontrib.cpptasks.CUtil;
 import net.sf.antcontrib.cpptasks.compiler.CaptureStreamHandler;
 /**
  * A add-in class for Gcc processors
- * 
- *  
+ *
+ *
  */
 public class GccProcessor {
     //   the results from gcc -dumpmachine
@@ -34,8 +34,8 @@ public class GccProcessor {
     private static String[] specs;
     //   the results from gcc -dumpversion
     private static String version;
-    private static int addLibraryPatterns(String[] libnames, StringBuffer buf,
-            String prefix, String extension, String[] patterns, int offset) {
+    private static int addLibraryPatterns(final String[] libnames, final StringBuffer buf,
+            final String prefix, final String extension, final String[] patterns, final int offset) {
         for (int i = 0; i < libnames.length; i++) {
             buf.setLength(0);
             buf.append(prefix);
@@ -48,21 +48,21 @@ public class GccProcessor {
     /**
      * Converts absolute Cygwin file or directory names to the corresponding
      * Win32 name.
-     * 
+     *
      * @param names
      *            array of names, some elements may be null, will be changed in
      *            place.
      */
-    public static void convertCygwinFilenames(String[] names) {
+    public static void convertCygwinFilenames(final String[] names) {
         if (names == null) {
             throw new NullPointerException("names");
         }
-        File gccDir = CUtil.getExecutableLocation("gcc.exe");
+        final File gccDir = CUtil.getExecutableLocation("gcc.exe");
         if (gccDir != null) {
-            String prefix = gccDir.getAbsolutePath() + "/..";
-            StringBuffer buf = new StringBuffer();
+            final String prefix = gccDir.getAbsolutePath() + "/..";
+            final StringBuffer buf = new StringBuffer();
             for (int i = 0; i < names.length; i++) {
-                String name = names[i];
+                final String name = names[i];
                 if (name != null && name.length() > 1 && name.charAt(0) == '/') {
                     buf.setLength(0);
                     buf.append(prefix);
@@ -72,9 +72,9 @@ public class GccProcessor {
             }
         }
     }
-    public static String[] getLibraryPatterns(String[] libnames) {
-        StringBuffer buf = new StringBuffer();
-        String[] patterns = new String[libnames.length * 2];
+    public static String[] getLibraryPatterns(final String[] libnames) {
+        final StringBuffer buf = new StringBuffer();
+        final String[] patterns = new String[libnames.length * 2];
         int offset = addLibraryPatterns(libnames, buf, "lib", ".a", patterns, 0);
         if (isHPUX()) {
             offset = addLibraryPatterns(libnames, buf, "lib", ".sl", patterns,
@@ -87,8 +87,8 @@ public class GccProcessor {
     }
     public static String getMachine() {
         if (machine == null) {
-            String[] args = new String[]{"gcc", "-dumpmachine"};
-            String[] cmdout = CaptureStreamHandler.run(args);
+            final String[] args = new String[]{"gcc", "-dumpmachine"};
+            final String[] cmdout = CaptureStreamHandler.run(args);
             if (cmdout.length == 0) {
                 machine = "nomachine";
             } else {
@@ -97,8 +97,8 @@ public class GccProcessor {
         }
         return machine;
     }
-    public static String[] getOutputFileSwitch(String letter, String outputFile) {
-        StringBuffer buf = new StringBuffer();
+    public static String getEscapedOutputFile(final String outputFile) {
+        final StringBuffer buf = new StringBuffer();
         if (outputFile.indexOf(' ') >= 0) {
             buf.append('"');
             buf.append(outputFile.replace('\\', '/'));
@@ -106,28 +106,31 @@ public class GccProcessor {
         } else {
             buf.append(outputFile.replace('\\', '/'));
         }
-        String[] retval = new String[]{letter, buf.toString()};
+        return buf.toString();
+    }
+    public static String[] getOutputFileSwitch(final String letter, final String outputFile) {
+        final String[] retval = new String[]{letter, getEscapedOutputFile(outputFile)};
         return retval;
     }
     /**
      * Returns the contents of the gcc specs file.
-     * 
+     *
      * The implementation locates gcc.exe in the executable path and then
      * builds a relative path name from the results of -dumpmachine and
      * -dumpversion. Attempts to use gcc -dumpspecs to provide this information
      * resulted in stalling on the Execute.run
-     * 
+     *
      * @return contents of the specs file
      */
     public static String[] getSpecs() {
         if (specs == null) {
-            File gccParent = CUtil.getExecutableLocation("gcc.exe");
+            final File gccParent = CUtil.getExecutableLocation("gcc.exe");
             if (gccParent != null) {
                 //
                 //  build a relative path like
                 //    ../lib/gcc-lib/i686-pc-cygwin/2.95.3-5/specs
                 //
-                StringBuffer buf = new StringBuffer("../lib/gcc-lib/");
+                final StringBuffer buf = new StringBuffer("../lib/gcc-lib/");
                 buf.append(getMachine());
                 buf.append('/');
                 buf.append(getVersion());
@@ -135,8 +138,8 @@ public class GccProcessor {
                 //
                 //  resolve it relative to the location of gcc.exe
                 //
-                String relativePath = buf.toString();
-                File specsFile = new File(gccParent, relativePath);
+                final String relativePath = buf.toString();
+                final File specsFile = new File(gccParent, relativePath);
                 //
                 //  found the specs file
                 //
@@ -144,9 +147,9 @@ public class GccProcessor {
                     //
                     //  read the lines in the file
                     //
-                    BufferedReader reader = new BufferedReader(new FileReader(
+                    final BufferedReader reader = new BufferedReader(new FileReader(
                             specsFile));
-                    Vector lines = new Vector(100);
+                    final Vector lines = new Vector(100);
                     String line = reader.readLine();
                     while (line != null) {
                         lines.addElement(line);
@@ -154,7 +157,7 @@ public class GccProcessor {
                     }
                     specs = new String[lines.size()];
                     lines.copyInto(specs);
-                } catch (IOException ex) {
+                } catch (final IOException ex) {
                 }
             }
         }
@@ -165,8 +168,8 @@ public class GccProcessor {
     }
     public static String getVersion() {
         if (version == null) {
-            String[] args = new String[]{"gcc", "-dumpversion"};
-            String[] cmdout = CaptureStreamHandler.run(args);
+            final String[] args = new String[]{"gcc", "-dumpversion"};
+            final String[] cmdout = CaptureStreamHandler.run(args);
             if (cmdout.length == 0) {
                 version = "noversion";
             } else {
@@ -180,24 +183,24 @@ public class GccProcessor {
     }
     /**
      * Determines if task is running with cygwin
-     * 
+     *
      * @return true if cygwin was detected
      */
     public static boolean isCygwin() {
         return getMachine().indexOf("cygwin") > 0;
     }
     private static boolean isHPUX() {
-        String osname = System.getProperty("os.name").toLowerCase();
+        final String osname = System.getProperty("os.name").toLowerCase();
         if (osname.indexOf("hp") >= 0 && osname.indexOf("ux") >= 0) {
             return true;
         }
         return false;
     }
     /**
-     * 
+     *
      * Parses the results of the specs file for a specific processor and
      * options
-     * 
+     *
      * @param specsContent
      *            Contents of specs file as returned from getSpecs
      * @param specSectionStart
@@ -205,8 +208,8 @@ public class GccProcessor {
      * @param options
      *            command line switches such as "-istart"
      */
-    public static String[][] parseSpecs(String[] specsContent,
-            String specSectionStart, String[] options) {
+    public static String[][] parseSpecs(final String[] specsContent,
+            final String specSectionStart, final String[] options) {
         if (specsContent == null) {
             throw new NullPointerException("specsContent");
         }
@@ -216,15 +219,15 @@ public class GccProcessor {
         if (options == null) {
             throw new NullPointerException("option");
         }
-        String[][] optionValues = new String[options.length][];
-        StringBuffer optionValue = new StringBuffer(40);
+        final String[][] optionValues = new String[options.length][];
+        final StringBuffer optionValue = new StringBuffer(40);
         for (int i = 0; i < specsContent.length; i++) {
             String specLine = specsContent[i];
             //
             //   if start of section then start paying attention
             //
             if (specLine.startsWith(specSectionStart)) {
-                Vector[] optionVectors = new Vector[options.length];
+                final Vector[] optionVectors = new Vector[options.length];
                 for (int j = 0; j < options.length; j++) {
                     optionVectors[j] = new Vector(10);
                 }
@@ -287,7 +290,7 @@ public class GccProcessor {
         //   fill in any missing option values with
         //      a zero-length string array
         for (int i = 0; i < optionValues.length; i++) {
-            String[] zeroLenArray = new String[0];
+            final String[] zeroLenArray = new String[0];
             if (optionValues[i] == null) {
                 optionValues[i] = zeroLenArray;
             }

@@ -21,6 +21,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.*;
 
+import net.sf.antcontrib.cpptasks.compiler.AbstractLinker;
 import net.sf.antcontrib.cpptasks.compiler.CompilerConfiguration;
 import net.sf.antcontrib.cpptasks.compiler.LinkType;
 import net.sf.antcontrib.cpptasks.compiler.Linker;
@@ -622,7 +623,7 @@ public class CCTask extends Task {
         //   Assemble hashtable of all files
         //       that we know how to compile (keyed by output file name)
         //
-        final Hashtable targets = getTargets(linkerConfig, objectFiles, versionInfo, _outfile);
+        final Hashtable targets = getTargets(linkerConfig, objectFiles, versionInfo, _outfile); // getTargets(..) -> createConfiguration(..) -> addImpliedArgs(..)
         TargetInfo linkTarget = null;
         //
         //   if output file is not specified,
@@ -804,7 +805,7 @@ public class CCTask extends Task {
                 final LinkerConfiguration linkConfig = (LinkerConfiguration) linkTarget
                         .getConfiguration();
                 if (failOnError) {
-                	linkConfig.link(this, linkTarget);
+                	linkConfig.link(this, linkTarget);  // link(..) -> prepareArguments(..) -> decorateLinkerOption(..) + getOutputFileSwitch(..)
                 } else {
                 	try {
                     	linkConfig.link(this, linkTarget);
@@ -1297,11 +1298,7 @@ public class CCTask extends Task {
     }
 
     /**
-     * User preference whether to use a high-level-tool for
-     * linker operations, e.g. gcc instead of ar to build static libraries.
-     * <p>
-     * Default is false.
-     * </p>
+     * See {@link #getUseHighlevelTool()}.
      * @param useHighlevelTool user preference, default is false
      */
     public void setUseHighlevelTool(final boolean useHighlevelTool) {
@@ -1309,12 +1306,53 @@ public class CCTask extends Task {
     }
 
     /**
-     * Gets the usehighleveltool flag.
+     * User preference whether to use a high-level-tool for
+     * linker operations, e.g. gcc instead of ar to build static libraries.
+     * <p>
+     * Default is false.
+     * </p>
      * @return the usehighleveltool flag
      * @see #setUseHighlevelTool(boolean)
      */
     public boolean getUseHighlevelTool() {
         return linkType.getUseHighlevelTool();
+    }
+
+    /**
+     * See {@link #getWriteSONAME()}
+     * @param v user preference, default is false
+     */
+    public void setWriteSONAME(final boolean v) {
+        linkType.setWriteSONAME(v);
+    }
+
+    /**
+     * User preference whether to write the {@code DT_SONAME} in a {@link #isSharedLibrary() shared library}
+     * using the {@link AbstractLinker#getOutputFileName(String, net.sf.antcontrib.cpptasks.VersionInfo)}.
+     * <p>
+     * This will set the linker options {@code -h name}, which is compatible with GNU ld and clang's ld,
+     * decorated as {@code -Wl,-h,name}.
+     * </p>
+     * <p>
+     * Feature is currently enabled for the GnuLinker (GccLinker 'gcc' + GppLinker 'gpp') as well as for clang (clang).
+     * </p>
+     * <p>
+     * Default is false.
+     * </p>
+     *
+     * @return the setSONAME flag
+     */
+    public boolean getWriteSONAME() {
+        return linkType.getWriteSONAME();
+    }
+
+    /**
+     * Gets whether the link should produce a shared library.
+     *
+     * @return boolean
+     */
+    public boolean isSharedLibrary() {
+        return linkType.isSharedLibrary();
     }
 
     /**
