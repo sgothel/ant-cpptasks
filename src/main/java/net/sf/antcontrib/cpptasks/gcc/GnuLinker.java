@@ -127,26 +127,26 @@ public abstract class GnuLinker extends AbstractLdLinker {
         }
         if (type.isStaticLibrary()) {
             if (isDarwin()) {
-                return isGCC() ? getStaticMachArLinker() : ( isXcodeRun() ? getStaticXcodeMachArClangLinker() : getStaticMachArClangLinker() );
+                return isGNU() ? getStaticMachArLinker() : ( isXcodeRun() ? getStaticXcodeMachArClangLinker() : getStaticMachArClangLinker() );
             } else {
-                return isGCC() ? getStaticArLinker() : getStaticArClangLinker();
+                return isGNU() ? getStaticArLinker() : getStaticArClangLinker();
             }
         }
         if (type.isPluginModule()) {
             if (isDarwin()) {
-                return isGCC() ? getStaticMachBundleLinker() : ( isXcodeRun() ? getStaticXcodeMachClangBundleLinker() : getStaticMachClangBundleLinker() );
+                return isGNU() ? getStaticMachBundleLinker() : ( isXcodeRun() ? getStaticXcodeMachClangBundleLinker() : getStaticMachClangBundleLinker() );
             } else {
-                return isGCC() ? getStaticDllLinker() : getStaticDllClangLinker();
+                return isGNU() ? getStaticDllLinker() : getStaticDllClangLinker();
             }
         }
         if (type.isSharedLibrary()) {
             if (isDarwin()) {
-                return isGCC() ? getStaticMachDllLinker() : ( isXcodeRun() ? getStaticXcodeMachDllClangLinker() : getStaticMachDllClangLinker() );
+                return isGNU() ? getStaticMachDllLinker() : ( isXcodeRun() ? getStaticXcodeMachDllClangLinker() : getStaticMachDllClangLinker() );
             } else {
-                return isGCC() ? getStaticDllLinker() : getStaticDllClangLinker();
+                return isGNU() ? getStaticDllLinker() : getStaticDllClangLinker();
             }
         }
-        return isGCC() ? getStaticInstance() : ( isXcodeRun() ? getStaticXcodeClangInstance() : getStaticClangInstance() ) ;
+        return isGNU() ? getStaticInstance() : ( isXcodeRun() ? getStaticXcodeClangInstance() : getStaticClangInstance() ) ;
     }
 
 }

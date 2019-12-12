@@ -54,7 +54,7 @@ public abstract class CommandLineLinker extends AbstractLinker
     private final CommandLineLinker libtoolLinker;
     private final boolean newEnvironment = false;
     private final String outputSuffix;
-    private final boolean isGCC;
+    private final boolean isGNU;
     private final boolean isCLANG;
 
 
@@ -73,7 +73,7 @@ public abstract class CommandLineLinker extends AbstractLinker
         this.isLibtool = isLibtool;
         this.isXcoderun = isXCoderun;
         this.libtoolLinker = libtoolLinker;
-        isGCC = "gcc".equals(command);
+        isGNU = "gcc".equals(command) || "g++".equals(command);
         isCLANG = "clang".equals(command);
     }
     public CommandLineLinker(final CommandLineLinker ld, final boolean isXCoderun) {
@@ -84,7 +84,7 @@ public abstract class CommandLineLinker extends AbstractLinker
         this.isLibtool = ld.isLibtool;
         this.isXcoderun = isXCoderun;
         this.libtoolLinker = ld.libtoolLinker;
-        isGCC = "gcc".equals(command);
+        isGNU = "gcc".equals(command) || "g++".equals(command);
         isCLANG = "clang".equals(command);
     }
     protected abstract void addBase(long base, Vector args);
@@ -256,8 +256,8 @@ public abstract class CommandLineLinker extends AbstractLinker
     protected final boolean isXcodeRun() {
         return isXcoderun;
     }
-    protected final boolean isGCC() {
-        return isGCC;
+    protected final boolean isGNU() {
+        return isGNU;
     }
     protected final boolean isCLANG() {
         return isCLANG;
@@ -335,7 +335,7 @@ public abstract class CommandLineLinker extends AbstractLinker
         final String[] preargs = config.getPreArguments();
         final String[] endargs = config.getEndArguments();
         final String outputSwitch[] =  getOutputFileSwitch(task, outputFile);
-        final boolean writeSONAME = task.getWriteSONAME() && task.isSharedLibrary() && ( isGCC || isCLANG );
+        final boolean writeSONAME = task.getWriteSONAME() && task.isSharedLibrary() && ( isGNU || isCLANG );
         int allArgsCount = preargs.length + 1 + outputSwitch.length +
                            sourceFiles.length + endargs.length +
                            ( writeSONAME ? 1 : 0 );
