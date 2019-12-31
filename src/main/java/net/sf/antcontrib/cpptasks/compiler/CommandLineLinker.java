@@ -360,7 +360,11 @@ public abstract class CommandLineLinker extends AbstractLinker
           allArgs[index++] = decorateLinkerOption(buf, preargs[i]);
         }
         if( writeSONAME ) {
-          allArgs[index++] = "-Wl,-h,"+GccProcessor.getEscapedOutputFile(outputFile);
+          if(isXcoderun) {
+              allArgs[index++] = "-Wl,-install_name,"+GccProcessor.getEscapedOutputFile(outputFile);
+          } else {
+              allArgs[index++] = "-Wl,-h,"+GccProcessor.getEscapedOutputFile(outputFile);
+          }
         }
         for (int i = 0; i < outputSwitch.length; i++) {
           allArgs[index++] = outputSwitch[i];
