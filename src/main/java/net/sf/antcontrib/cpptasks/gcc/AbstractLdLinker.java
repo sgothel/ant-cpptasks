@@ -229,31 +229,31 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
         final StringBuffer buf = new StringBuffer();
         int patternCount = libnames.length;
         if (libType == null) {
-                patternCount *= 2;
+            patternCount *= 2;
         }
         final String[] patterns = new String[patternCount];
         int offset = 0;
         if (libType == null || "static".equals(libType.getValue())) {
-                offset = addLibraryPatterns(libnames, buf, "lib", ".a", patterns, 0);
+            offset = addLibraryPatterns(libnames, buf, "lib", ".a", patterns, 0);
         }
         if (libType != null && "framework".equals(libType.getValue()) && isDarwin()) {
-                for(int i = 0; i < libnames.length; i++) {
-                        buf.setLength(0);
-                        buf.append(libnames[i]);
-                        buf.append(".framework/");
-                        buf.append(libnames[i]);
-                        patterns[offset++] = buf.toString();
-                }
+            for(int i = 0; i < libnames.length; i++) {
+                buf.setLength(0);
+                buf.append(libnames[i]);
+                buf.append(".framework/");
+                buf.append(libnames[i]);
+                patterns[offset++] = buf.toString();
+            }
         } else {
-                if (libType == null || !"static".equals(libType.getValue())) {
-                        if (isHPUX()) {
-                                offset = addLibraryPatterns(libnames, buf, "lib", ".sl", patterns,
-                                                offset);
-                        } else {
-                                offset = addLibraryPatterns(libnames, buf, "lib", ".so", patterns,
-                                                offset);
-                        }
+            if (libType == null || !"static".equals(libType.getValue())) {
+                if (isHPUX()) {
+                    offset = addLibraryPatterns(libnames, buf, "lib", ".sl", patterns, offset);
+                } else if (isWindows()) {
+                    offset = addLibraryPatterns(libnames, buf, "", ".dll", patterns, offset);
+                } else {
+                    offset = addLibraryPatterns(libnames, buf, "lib", ".so", patterns, offset);
                 }
+            }
         }
         return patterns;
     }
@@ -309,18 +309,24 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
         for (int i = 0; i < libnames.length; i++) {
             final String libname = libnames[i];
             for (int j = 0; j < localSources.length; j++) {
-                if (localSources[j] != null
-                        && localSources[j].indexOf(libname) > 0
-                        && localSources[j].indexOf("lib") > 0) {
-                    final String filename = new File(localSources[j]).getName();
-                    if (filename.startsWith("lib")
-                            && filename.substring(3).startsWith(libname)) {
-                        final String extension = filename
-                                .substring(libname.length() + 3);
-                        if (extension.equals(".a") || extension.equals(".so")
-                                || extension.equals(".sl")) {
-                            localSources[j] = null;
-                            extra++;
+                if (localSources[j] != null && localSources[j].indexOf(libname) > 0) {
+                    if ( !isWindows() && localSources[j].indexOf("lib") > 0 ) {
+                        final String filename = new File(localSources[j]).getName();
+                        if (filename.startsWith("lib") && filename.substring(3).startsWith(libname)) {
+                            final String extension = filename.substring(libname.length() + 3);
+                            if (extension.equals(".a") || extension.equals(".so") || extension.equals(".sl")) {
+                                localSources[j] = null;
+                                extra++;
+                            }
+                        }
+                    } else if ( isWindows() && localSources[j].indexOf(".dll") > 0 ) {
+                        final String filename = new File(localSources[j]).getName();
+                        if (filename.startsWith(libname)) {
+                            final String extension = filename.substring(libname.length());
+                            if ( extension.equals(".dll") ) {
+                                localSources[j] = null;
+                                extra++;
+                            }
                         }
                     }
                 }
