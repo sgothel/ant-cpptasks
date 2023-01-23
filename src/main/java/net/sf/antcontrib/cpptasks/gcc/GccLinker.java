@@ -47,6 +47,11 @@ public class GccLinker extends GnuLinker {
     private static final GccLinker dllClangLinker = new GccLinker("clang", objFiles,
             discardFiles, "lib", ".so", false, new GccLinker("clang", objFiles, discardFiles, "lib", ".so", true, null));
 
+    private static final GccLinker dllWindowsLinker = new GccLinker("gcc", objFiles,
+            discardFiles, "", ".dll", false, new GccLinker("gcc", objFiles, discardFiles, "", ".dll", true, null));
+    private static final GccLinker dllWindowsClangLinker = new GccLinker("clang", objFiles,
+            discardFiles, "", ".dll", false, new GccLinker("clang", objFiles, discardFiles, "", ".dll", true, null));
+
     private static final GccLinker arLinker = new GccLinker("gcc", objFiles,
             discardFiles, "lib", ".a", false, new GccLinker("gcc", objFiles, discardFiles, "lib", ".a", true, null));
     private static final GccLinker arClangLinker = new GccLinker("clang", objFiles,
@@ -95,11 +100,11 @@ public class GccLinker extends GnuLinker {
 
     @Override
     protected final GnuLinker getStaticDllLinker() {
-        return dllLinker;
+        return isWindows() ? dllWindowsLinker : dllLinker;
     }
     @Override
     protected final GnuLinker getStaticDllClangLinker() {
-        return dllClangLinker;
+        return isWindows() ? dllWindowsClangLinker : dllClangLinker;
     }
     @Override
     protected final GnuLinker getStaticArLinker() {
