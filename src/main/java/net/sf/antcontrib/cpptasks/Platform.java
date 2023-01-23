@@ -53,9 +53,6 @@ public class Platform {
         if ( osLower.startsWith("sunos") ) {
             return OSType.SUNOS;
         }
-        if ( osLower.startsWith("hp-ux") ) {
-            return OSType.HPUX;
-        }
         if ( osLower.startsWith("windows") ) {
             return OSType.WINDOWS;
         }
@@ -64,6 +61,12 @@ public class Platform {
         }
         if ( osLower.startsWith("ios") ) {
             return OSType.IOS;
+        }
+        if ( osLower.startsWith("hp-ux") ||
+             ( osLower.startsWith("hp") && osLower.indexOf("ux") >= 0 )
+           )
+        {
+            return OSType.HPUX;
         }
         throw new RuntimeException("Please port OS detection to your platform (" + OS_NAME + ")");
     }

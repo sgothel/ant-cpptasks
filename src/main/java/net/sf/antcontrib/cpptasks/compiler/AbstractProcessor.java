@@ -114,17 +114,20 @@ public abstract class AbstractProcessor implements Processor, Cloneable {
 
     /**
      * Returns true if the target operating system is Mac OS X or Darwin.
-     *
-     * @return boolean
      */
     protected boolean isDarwin() {
         return OSType.MACOS == Platform.OS_TYPE;
     }
 
     /**
+     * Returns true if the target operating system is HP-UX.
+     */
+    protected boolean isHPUX() {
+        return OSType.HPUX == Platform.OS_TYPE;
+    }
+
+    /**
      * Returns true if the target operating system is MS Windows.
-     *
-     * @return boolean
      */
     protected boolean isWindows() {
         return OSType.WINDOWS == Platform.OS_TYPE;

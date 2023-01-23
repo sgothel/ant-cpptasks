@@ -274,13 +274,7 @@ public abstract class AbstractLdLinker extends CommandLineLinker {
     public boolean isCaseSensitive() {
         return true;
     }
-    protected boolean isHPUX() {
-        final String osname = System.getProperty("os.name").toLowerCase();
-        if (osname.indexOf("hp") >= 0 && osname.indexOf("ux") >= 0) {
-            return true;
-        }
-        return false;
-    }
+
     /**
      * Prepares argument list for exec command. Will return null if command
      * line would exceed allowable command line buffer.
