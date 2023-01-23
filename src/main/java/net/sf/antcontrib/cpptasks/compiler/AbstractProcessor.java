@@ -16,6 +16,10 @@
  */
 package net.sf.antcontrib.cpptasks.compiler;
 import org.apache.tools.ant.types.Environment;
+
+import net.sf.antcontrib.cpptasks.OSType;
+import net.sf.antcontrib.cpptasks.Platform;
+
 /**
  * An abstract processor (compiler/linker) implementation.
  *
@@ -43,26 +47,26 @@ public abstract class AbstractProcessor implements Processor, Cloneable {
      *            command
      * @return identifier for the processor
      */
-    protected static String getIdentifier(String[] command, String fallback) {
+    protected static String getIdentifier(final String[] command, final String fallback) {
         String identifier = fallback;
         try {
-            String[] cmdout = CaptureStreamHandler.run(command);
+            final String[] cmdout = CaptureStreamHandler.run(command);
             if (cmdout.length > 0) {
                 identifier = cmdout[0];
             }
-        } catch (Throwable ex) {
+        } catch (final Throwable ex) {
             identifier = fallback + ":" + ex.toString();
         }
         return identifier;
     }
     private final String[] headerExtensions;
     private final String[] sourceExtensions;
-    protected AbstractProcessor(String[] sourceExtensions,
-            String[] headerExtensions) {
+    protected AbstractProcessor(final String[] sourceExtensions,
+            final String[] headerExtensions) {
         this.sourceExtensions = sourceExtensions.clone();
         this.headerExtensions = headerExtensions.clone();
     }
-    protected AbstractProcessor(AbstractProcessor ap) {
+    protected AbstractProcessor(final AbstractProcessor ap) {
         this.sourceExtensions = ap.sourceExtensions.clone();
         this.headerExtensions = ap.headerExtensions.clone();
     }
@@ -75,8 +79,9 @@ public abstract class AbstractProcessor implements Processor, Cloneable {
      *         processor recognizes the file but doesn't process it (header
      *         files, for example), 100 indicates strong interest
      */
-    public int bid(String inputFile) {
-        String lower = inputFile.toLowerCase();
+    @Override
+    public int bid(final String inputFile) {
+        final String lower = inputFile.toLowerCase();
         for (int i = 0; i < sourceExtensions.length; i++) {
             if (lower.endsWith(sourceExtensions[i])) {
                 return DEFAULT_PROCESS_BID;
@@ -89,44 +94,43 @@ public abstract class AbstractProcessor implements Processor, Cloneable {
         }
         return 0;
     }
-    public Processor changeEnvironment(boolean newEnvironment, Environment env) {
+    @Override
+    public Processor changeEnvironment(final boolean newEnvironment, final Environment env) {
         return this;
     }
+    @Override
     protected Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
     public String[] getHeaderExtensions() {
         return this.headerExtensions.clone();
     }
+    @Override
     abstract public String getIdentifier();
-    /**
-     * Gets the target operating system architecture
-     *
-     * @return String target operating system architecture
-     */
-    protected String getOSArch() {
-        return System.getProperty("os.arch");
-    }
-    /**
-     * Gets the target operating system name
-     *
-     * @return String target operating system name
-     */
-    protected String getOSName() {
-        return System.getProperty("os.name");
-    }
+
     public String[] getSourceExtensions() {
         return this.sourceExtensions.clone();
     }
+
     /**
      * Returns true if the target operating system is Mac OS X or Darwin.
      *
      * @return boolean
      */
     protected boolean isDarwin() {
-        String osName = getOSName();
-        return "Mac OS X".equals(osName);
+        return OSType.MACOS == Platform.OS_TYPE;
     }
+
+    /**
+     * Returns true if the target operating system is MS Windows.
+     *
+     * @return boolean
+     */
+    protected boolean isWindows() {
+        return OSType.WINDOWS == Platform.OS_TYPE;
+    }
+
+    @Override
     public final String toString() {
         return getIdentifier();
     }
